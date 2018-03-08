@@ -209,7 +209,13 @@ Recorder.prototype.initSourceNode = function( sourceNode ){
 
 Recorder.prototype.initWorker = function(){
   var self = this;
-  var streamPage = function( e ) { self.streamPage( e.data ); };
+  var streamPage = function( e ) {
+    if (e.data && typeof e.data === 'object' && e.data.type === 'opus') {
+      self.streamOpusPacket(e.data.data);
+      return;
+    }
+    self.streamPage( e.data );
+  };
   var storePage = function( e ) { self.storePage( e.data ); };
 
   this.recordedPages = [];
@@ -315,6 +321,12 @@ Recorder.prototype.streamPage = function( page ) {
   }
 };
 
+Recorder.prototype.streamOpusPacket = function(packet) {
+  if ( packet === null ) {
+    return;
+  }
+  this.onopusdataavailable(packet);
+};
 
 // Callback Handlers
 Recorder.prototype.ondataavailable = function(){};
@@ -322,7 +334,7 @@ Recorder.prototype.onpause = function(){};
 Recorder.prototype.onresume = function(){};
 Recorder.prototype.onstart = function(){};
 Recorder.prototype.onstop = function(){};
-
+Recorder.prototype.onopusdataavailable = function(){};
 
 module.exports = Recorder;
 
