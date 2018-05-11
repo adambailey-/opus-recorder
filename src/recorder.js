@@ -140,7 +140,17 @@ Recorder.prototype.initWorker = function(){
 
   this.recordedPages = [];
   this.totalLength = 0;
-  this.encoder = new global.Worker( this.config.encoderPath );
+  var encoderWorkerSrc = require('raw-loader!./encoderWorker.inline');
+  var blob;
+  try {
+    blob = new Blob([encoderWorkerSrc], {type: 'application/javascript'});
+  } catch (e) {
+    global.BlobBuilder = global.BlobBuilder || global.WebKitBlobBuilder || global.MozBlobBuilder;
+    blob = new global.BlobBuilder();
+    blob.append(encoderWorkerSrc);
+    blob = blob.getBlob();
+  }
+  this.encoder = new global.Worker(URL.createObjectURL(blob));
   this.encoder.addEventListener( "message", this.config.streamPages ? streamPage : storePage );
 };
 
