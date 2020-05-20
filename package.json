@@ -1,6 +1,6 @@
 {
   "name": "opus-recorder",
-  "version": "4.1.0",
+  "version": "6.2.0",
   "description": "A library for recording opus encoded audio",
   "homepage": "https://github.com/chris-rudmin/opus-recorder",
   "author": "Chris Rudmin",
@@ -21,12 +21,7 @@
   "license": "MIT",
   "main": "dist/recorder.min.js",
   "files": [
-    "dist/recorder.min.js",
-    "dist/encoderWorker.min.js",
-    "dist/encoderWorker.min.wasm",
-    "dist/decoderWorker.min.js",
-    "dist/decoderWorker.min.wasm",
-    "dist/waveWorker.min.js"
+    "dist/"
   ],
   "repository": {
     "type": "git",
@@ -42,13 +37,15 @@
     "webpack": "webpack"
   },
   "devDependencies": {
-    "chai": "^4.1.1",
-    "mocha": "^5.0.0",
-    "promise": "^8.0.1",
-    "require-uncached": "^1.0.3",
-    "sinon": "^4.2.2",
-    "sinon-chai": "^2.14.0",
-    "webpack": "^3.10.0",
-    "raw-loader": "^0.5.1"
-  }
+    "chai": "^4.2.0",
+    "mocha": "^7.1.2",
+    "promise": "^8.1.0",
+    "raw-loader": "4.0.1",
+    "require-uncached": "^2.0.0",
+    "sinon": "^9.0.2",
+    "sinon-chai": "^3.5.0",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "dependencies": {}
 }

@@ -5,8 +5,8 @@ A javascript library to encode the output of Web Audio API nodes in Ogg Opus or 
 
 #### Libraries Used
 
-- Libopus: v1.2.1 compiled with emscripten 1.37.33
-- speexDSP: 1.2RC3 compiled with emscripten 1.37.33
+- Libopus: v1.3.1 compiled with emscripten 1.38.48
+- speexDSP: 1.2.0 compiled with emscripten 1.38.48
 
 #### Required Files
 
@@ -35,7 +35,6 @@ Creates a recorder instance.
 
 - **bufferLength**                - (*optional*) The length of the buffer that the internal JavaScriptNode uses to capture the audio. Can be tweaked if experiencing performance issues. Defaults to `4096`.
 - **encoderPath**                 - (*optional*) Path to `encoderWorker.min.js` or `waveWorker.min.js` worker script. Defaults to `encoderWorker.min.js`
-- **leaveStreamOpen**             - (*optional*) Keep the stream and context around when trying to `stop` recording, so you can re-`start` without re-initializing the stream and context. Defaults to `false`.
 - **mediaTrackConstraints**       - (*optional*) Object to specify [media track constraints](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints). Defaults to `true`.
 - **monitorGain**                 - (*optional*) Sets the gain of the monitoring output. Gain is an a-weighted value between `0` and `1`. Defaults to `0`
 - **numberOfChannels**            - (*optional*) The number of channels to record. `1` = mono, `2` = stereo. Defaults to `1`. Maximum `2` channels are supported.
@@ -49,10 +48,11 @@ Creates a recorder instance.
 - **encoderComplexity**           - (*optional*) Value between 0 and 10 which determines latency and processing for encoding. `0` is fastest with lowest complexity. `10` is slowest with highest complexity. The encoder selects a default when this is not specified.
 - **encoderFrameSize**            - (*optional*) Specifies the frame size in ms used for encoding. Defaults to `20`.
 - **encoderSampleRate**           - (*optional*) Specifies the sample rate to encode at. Defaults to `48000`. Supported values are `8000`, `12000`, `16000`, `24000` or `48000`.
-- **maxBuffersPerPage**           - (*optional*) Maximum number of buffers to use before generating an Ogg page. This can be used to lower the streaming latency. The lower the value the more overhead the ogg stream will incur. Defaults to `40`.
+- **maxFramesPerPage**            - (*optional*) Maximum number of frames to collect before generating an Ogg page. This can be used to lower the streaming latency. The lower the value the more overhead the ogg stream will incur. Defaults to `40`.
 - **originalSampleRateOverride**  - (*optional*) Override the ogg opus 'input sample rate' field. Google Speech API requires this field to be `16000`.
 - **resampleQuality**             - (*optional*) Value between 0 and 10 which determines latency and processing for resampling. `0` is fastest with lowest quality. `10` is slowest with highest quality. Defaults to `3`.
 - **streamPages**                 - (*optional*) `dataAvailable` event will fire after each encoded page. Defaults to `false`.
+- **reuseWorker**                 - (*optional*) If true, the worker is not automatically destroyed when `stop` is called. Instead, it is reused for subsequent `start` calls and must be explicitly destroyed after stopping by calling `destroyWorker`. Defaults to `false`. 
 
 
 #### Config options for WAV recorder
@@ -63,11 +63,12 @@ Creates a recorder instance.
 ---------
 #### Instance Methods
 
+
 ```js
-rec.pause()
+rec.pause([flush])
 ```
 
-**pause** will keep the stream and monitoring alive, but will not be recording the buffers. Will call the `onpause` callback when paused. Subsequent calls to **resume** will add to the current recording.
+**pause** will keep the stream and monitoring alive, but will not be recording the buffers. If `flush` is `true` and `streamPages` is set, any pending encoded frames of data will be flushed, and it will return a promise that only resolves after the frames have been flushed to `ondataavailable`. Will call the `onpause` callback when paused. Subsequent calls to **resume** will add to the current recording.
 
 ```js
 rec.resume()
@@ -91,7 +92,7 @@ rec.setMonitorGain( gain )
 rec.start( [sourceNode] )
 ```
 
-**start** Initalizes the worker, audio context, and an audio stream and begin capturing audio. Returns a promise which resolves when recording is started. Will callback `onstart` when started. Optionally accepts a source node which can be used in place of initializing the microphone stream. For iOS support, `start` needs to be initiated from a user action.
+**start** Initalizes the worker, audio context, and an audio stream and begin capturing audio. Returns a promise which resolves when recording is started. Will callback `onstart` when started. Optionally accepts a source node which can be used in place of initializing the microphone stream. For iOS support, `start` needs to be initiated from a user action. If a sourceNode is provided, then the stream and audioContext will need to be managed by the implementation.
 
 ```js
 rec.stop()
@@ -100,11 +101,25 @@ rec.stop()
 **stop** will cease capturing audio and disable the monitoring and mic input stream. Will request the recorded data and then terminate the worker once the final data has been published. Will call the `onstop` callback when stopped.
 
 ```js
-rec.clearStream()
+rec.destroyWorker()
 ```
 
-**clearStream** will stop and delete the stream as well as close the audio context. You will only ever call this manually if you have `config.leaveStreamOpen` set to `true`.
+**destroyWorker** will destroy the worker freeing up the browser resources. If the recorder is re-started, a new worker will be created. Note that `destroyWorker` is automatically called when stopping unless `reuseWorker` is true.
 
+```js
+rec.loadWorker()
+```
+
+**loadWorker** triggers pre-loading of the worker. This can reduce the startup latency when calling `start`. Call `destroyWorker` to clean the worker when the recorder is stopped/not started, or it will be automatically cleaned up after stopping unless `reuseWorker` is true.
+
+---------
+#### Instance Fields
+
+```js
+rec.encodedSamplePosition
+```
+
+Reads the currently encoded sample position (the number of samples up to and including the most recent data provided to `ondataavailable`). For Opus, the encoded sample rate is always 48kHz, so a time position can be determined by dividing by 48000.
 
 ---------
 #### Static Methods
@@ -180,7 +195,7 @@ Unsupported:
 
 - iOS 11.2.2 and iOS 11.2.5 are not working due to a regression in WebAssembly: https://bugs.webkit.org/show_bug.cgi?id=181781
 - Firefox does not support sample rates above 48000Hz: https://bugzilla.mozilla.org/show_bug.cgi?id=1124981
-- macOS Safari v11 does not sample rates above 44100Hz
+- macOS Safari v11 does not support sample rates above 44100Hz
 
 
 ---------
@@ -198,7 +213,7 @@ Windows: Install autotools using [MSYS2](http://www.msys2.org/)
 pacman -S make autoconf automake libtool pkgconfig
 ```
 
-[Inatall Node.js](https://nodejs.org/en/download/)
+[Install Node.js](https://nodejs.org/en/download/)
 
 [Install EMScripten](https://kripken.github.io/emscripten-site/docs/getting_started/downloads.html)
 

@@ -10,6 +10,8 @@ var Recorder = function( config ){
     throw new Error("Recording is not supported in this browser");
   }
 
+  if ( !config ) config = {};
+
   this.state = "inactive";
   this.config = Object.assign({
     bufferLength: 4096,
@@ -17,18 +19,18 @@ var Recorder = function( config ){
     encoderFrameSize: 20,
     encoderPath: 'encoderWorker.min.js',
     encoderSampleRate: 48000,
-    leaveStreamOpen: false,
-    maxBuffersPerPage: 40,
+    maxFramesPerPage: 40,
     mediaTrackConstraints: true,
     monitorGain: 0,
     numberOfChannels: 1,
     recordingGain: 1,
     resampleQuality: 3,
     streamPages: false,
+    reuseWorker: false,
     wavBitDepth: 16,
   }, config );
 
-  this.initWorker();
+  this.encodedSamplePosition = 0;
 };
 
 
@@ -40,7 +42,7 @@ Recorder.isRecordingSupported = function(){
 
 // Instance Methods
 Recorder.prototype.clearStream = function(){
-  if ( this.stream ) {
+  if ( this.stream ){
 
     if ( this.stream.getTracks ) {
       this.stream.getTracks().forEach( function( track ){
@@ -55,7 +57,7 @@ Recorder.prototype.clearStream = function(){
     delete this.stream;
   }
 
-  if ( this.audioContext ){
+  if ( this.audioContext && this.closeAudioContext ){
     this.audioContext.close();
     delete this.audioContext;
   }
@@ -78,17 +80,18 @@ Recorder.prototype.encodeBuffers = function( inputBuffer ){
 Recorder.prototype.initAudioContext = function( sourceNode ){
   if (sourceNode && sourceNode.context) {
     this.audioContext = sourceNode.context;
+    this.closeAudioContext = false;
   }
 
-  if ( !this.audioContext ) {
+  else {
     this.audioContext = new AudioContext();
+    this.closeAudioContext = true;
   }
 
   return this.audioContext;
 };
 
 Recorder.prototype.initAudioGraph = function(){
-  var self = this;
 
   // First buffer can contain old data. Don't encode it.
   this.encodeBuffers = function(){
@@ -97,8 +100,8 @@ Recorder.prototype.initAudioGraph = function(){
 
   this.scriptProcessorNode = this.audioContext.createScriptProcessor( this.config.bufferLength, this.config.numberOfChannels, this.config.numberOfChannels );
   this.scriptProcessorNode.connect( this.audioContext.destination );
-  this.scriptProcessorNode.onaudioprocess = function( e ) {
-    self.encodeBuffers( e.inputBuffer );
+  this.scriptProcessorNode.onaudioprocess = ( e ) => {
+    this.encodeBuffers( e.inputBuffer );
   };
 
   this.monitorGainNode = this.audioContext.createGain();
@@ -111,53 +114,80 @@ Recorder.prototype.initAudioGraph = function(){
 };
 
 Recorder.prototype.initSourceNode = function( sourceNode ){
-  var self = this;
-
   if ( sourceNode && sourceNode.context ) {
     return global.Promise.resolve( sourceNode );
   }
 
-  if ( this.stream && this.sourceNode ) {
-    return global.Promise.resolve( this.sourceNode );
-  }
-
-  return global.navigator.mediaDevices.getUserMedia({ audio : this.config.mediaTrackConstraints }).then( function( stream ){
-    self.stream = stream;
-    return self.audioContext.createMediaStreamSource( stream );
+  return global.navigator.mediaDevices.getUserMedia({ audio : this.config.mediaTrackConstraints }).then( ( stream ) => {
+    this.stream = stream;
+    return this.audioContext.createMediaStreamSource( stream );
   });
 };
 
+Recorder.prototype.loadWorker = function() {
+  if ( !this.encoder ) {
+    this.encoder = new global.Worker(this.config.encoderPath);
+  }
+};
+
 Recorder.prototype.initWorker = function(){
-  var self = this;
-  var streamPage = function( e ) {
-    if (e.data && typeof e.data === 'object' && e.data.type === 'opus') {
-      self.streamOpusPacket(e.data.data);
-      return;
-    }
-    self.streamPage( e.data );
-  };
-  var storePage = function( e ) { self.storePage( e.data ); };
+  var onPage = (this.config.streamPages ? this.streamPage : this.storePage).bind(this);
+  this.streamOpusPacket.bind(this);
 
   this.recordedPages = [];
   this.totalLength = 0;
-  var encoderWorkerSrc = require('raw-loader!./encoderWorker.inline');
-  var blob;
-  try {
-    blob = new Blob([encoderWorkerSrc], {type: 'application/javascript'});
-  } catch (e) {
-    global.BlobBuilder = global.BlobBuilder || global.WebKitBlobBuilder || global.MozBlobBuilder;
-    blob = new global.BlobBuilder();
-    blob.append(encoderWorkerSrc);
-    blob = blob.getBlob();
-  }
-  this.encoder = new global.Worker(URL.createObjectURL(blob));
-  this.encoder.addEventListener( "message", this.config.streamPages ? streamPage : storePage );
+  this.loadWorker();
+
+  return new Promise((resolve, reject) => {
+    var callback = (e) => {
+      switch( e['data']['message'] ){
+        case 'ready':
+          resolve();
+          break;
+        case 'page':
+          this.encodedSamplePosition = e['data']['samplePosition'];
+          console.log('page, ' + e);
+          if (typeof e['data'] === 'object' && e['data']['type'] === 'opus') {
+            this.streamOpusPacket(e['data']['data']);
+            break;
+          }
+          onPage(e['data']['page']);
+          break;
+        case 'done':
+          this.encoder.removeEventListener( "message", callback );
+          this.finish();
+          break;
+      }
+    };
+
+    this.encoder.addEventListener( "message", callback );
+    this.encoder.postMessage( Object.assign({
+      command: 'init',
+      originalSampleRate: this.audioContext.sampleRate,
+      wavSampleRate: this.audioContext.sampleRate
+    }, this.config));
+  });
 };
 
-Recorder.prototype.pause = function(){
-  if ( this.state === "recording" ){
+Recorder.prototype.pause = function( flush ) {
+  if ( this.state === "recording" ) {
     this.state = "paused";
+    if ( flush && this.config.streamPages ) {
+      var encoder = this.encoder;
+      return new Promise((resolve, reject) => {
+        var callback = (e) => {
+          if ( e["data"]["message"] === 'flushed' ) {
+            encoder.removeEventListener( "message", callback );
+            this.onpause();
+            resolve();
+          }
+        };
+        encoder.addEventListener( "message", callback );
+        encoder.postMessage( { command: "flush" } );
+      });
+    }
     this.onpause();
+    return Promise.resolve();
   }
 };
 
@@ -186,21 +216,18 @@ Recorder.prototype.setMonitorGain = function( gain ){
 
 Recorder.prototype.start = function( sourceNode ){
   if ( this.state === "inactive" ) {
-    var self = this;
     this.initAudioContext( sourceNode );
     this.initAudioGraph();
 
-    return this.initSourceNode( sourceNode ).then( function( sourceNode ){
-      self.state = "recording";
-      self.encoder.postMessage( Object.assign({
-        command: 'init',
-        originalSampleRate: self.audioContext.sampleRate,
-        wavSampleRate: self.audioContext.sampleRate
-      }, self.config));
-      self.sourceNode = sourceNode;
-      self.sourceNode.connect( self.monitorGainNode );
-      self.sourceNode.connect( self.recordingGainNode );
-      self.onstart();
+    this.encodedSamplePosition = 0;
+
+    return Promise.all([this.initSourceNode(sourceNode), this.initWorker()]).then((results) => {
+      this.sourceNode = results[0];
+      this.state = "recording";
+      this.onstart();
+      this.encoder.postMessage({ command: 'getHeaderPages' });
+      this.sourceNode.connect( this.monitorGainNode );
+      this.sourceNode.connect( this.recordingGainNode );
     });
   }
 };
@@ -212,43 +239,42 @@ Recorder.prototype.stop = function(){
     this.scriptProcessorNode.disconnect();
     this.recordingGainNode.disconnect();
     this.sourceNode.disconnect();
+    this.clearStream();
 
-    if ( !this.config.leaveStreamOpen ) {
-      this.clearStream();
+    var encoder = this.encoder;
+    return new Promise((resolve) => {
+      var callback = (e) => {
+        if ( e["data"]["message"] === 'done' ) {
+          encoder.removeEventListener( "message", callback );
+          resolve();
+        }
+      };
+      encoder.addEventListener( "message", callback );
+      encoder.postMessage({ command: "done" });
+      if ( !this.config.reuseWorker ) {
+        encoder.postMessage({ command: "close" });
+      }
+    });
+  }
+  return Promise.resolve();
+};
+
+Recorder.prototype.destroyWorker = function(){
+  if ( this.state === "inactive" ) {
+    if ( this.encoder ) {
+      this.encoder.postMessage({ command: "close" });
+      delete this.encoder;
     }
-
-    this.encoder.postMessage({ command: "done" });
   }
 };
 
 Recorder.prototype.storePage = function( page ) {
-  if ( page === null ) {
-    var outputData = new Uint8Array( this.totalLength );
-    this.recordedPages.reduce( function( offset, page ){
-      outputData.set( page, offset );
-      return offset + page.length;
-    }, 0);
-
-    this.ondataavailable( outputData );
-    this.initWorker();
-    this.onstop();
-  }
-
-  else {
-    this.recordedPages.push( page );
-    this.totalLength += page.length;
-  }
+  this.recordedPages.push( page );
+  this.totalLength += page.length;
 };
 
 Recorder.prototype.streamPage = function( page ) {
-  if ( page === null ) {
-    this.initWorker();
-    this.onstop();
-  }
-
-  else {
-    this.ondataavailable( page );
-  }
+  this.ondataavailable( page );
 };
 
 Recorder.prototype.streamOpusPacket = function(packet) {
@@ -258,6 +284,23 @@ Recorder.prototype.streamOpusPacket = function(packet) {
   this.onopusdataavailable(packet);
 };
 
+Recorder.prototype.finish = function() {
+  if( !this.config.streamPages ) {
+    var outputData = new Uint8Array( this.totalLength );
+    this.recordedPages.reduce( function( offset, page ){
+      outputData.set( page, offset );
+      return offset + page.length;
+    }, 0);
+
+    this.ondataavailable( outputData );
+  }
+  this.onstop();
+  if ( !this.config.reuseWorker ) {
+    delete this.encoder;
+  }
+};
+
+
 // Callback Handlers
 Recorder.prototype.ondataavailable = function(){};
 Recorder.prototype.onpause = function(){};
@@ -265,5 +308,6 @@ Recorder.prototype.onresume = function(){};
 Recorder.prototype.onstart = function(){};
 Recorder.prototype.onstop = function(){};
 Recorder.prototype.onopusdataavailable = function(){};
+
 
 module.exports = Recorder;

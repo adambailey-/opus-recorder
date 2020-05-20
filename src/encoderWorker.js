@@ -9,19 +9,42 @@ global['onmessage'] = function( e ){
     switch( e['data']['command'] ){
 
       case 'encode':
+        console.log('encode message, ' + encoder);
         if (encoder){
           encoder.encode( e['data']['buffers'] );
+        }
+        break;
+
+      case 'getHeaderPages':
+        if (encoder){
+          encoder.generateIdPage();
+          encoder.generateCommentPage();
         }
         break;
 
       case 'done':
         if (encoder) {
           encoder.encodeFinalFrame();
+          global['postMessage']( {message: 'done'} );
+        }
+        break;
+
+      case 'close':
+        global['close']();
+        break;
+
+      case 'flush':
+        if (encoder) {
+          encoder.flush();
         }
         break;
 
       case 'init':
+        if ( encoder ) {
+          encoder.destroy();
+        }
         encoder = new OggOpusEncoder( e['data'], Module );
+        global['postMessage']( {message: 'ready'} );
         break;
 
       default:
@@ -44,17 +67,19 @@ var OggOpusEncoder = function( config, Module ){
                               // 2051 = Restricted Low Delay (Lowest latency)
     encoderFrameSize: 20, // Specified in ms.
     encoderSampleRate: 48000, // Desired encoding sample rate. Audio will be resampled
-    maxBuffersPerPage: 40, // Tradeoff latency with overhead
+    maxFramesPerPage: 40, // Tradeoff latency with overhead
     numberOfChannels: 1,
     originalSampleRate: 44100,
     resampleQuality: 3, // Value between 0 and 10 inclusive. 10 being highest quality.
-    serial: Math.floor( Math.random() * Math.pow(2,32) )
+    serial: Math.floor(Math.random() * 4294967296)
   }, config );
 
   this._opus_encoder_create = Module._opus_encoder_create;
+  this._opus_encoder_destroy = Module._opus_encoder_destroy;
   this._opus_encoder_ctl = Module._opus_encoder_ctl;
   this._speex_resampler_process_interleaved_float = Module._speex_resampler_process_interleaved_float;
   this._speex_resampler_init = Module._speex_resampler_init;
+  this._speex_resampler_destroy = Module._speex_resampler_destroy;
   this._opus_encode_float = Module._opus_encode_float;
   this._free = Module._free;
   this._malloc = Module._malloc;
@@ -68,13 +93,11 @@ var OggOpusEncoder = function( config, Module ){
   this.segmentDataIndex = 0;
   this.segmentTable = new Uint8Array( 255 ); // Maximum data segments
   this.segmentTableIndex = 0;
-  this.buffersInPage = 0;
+  this.framesInPage = 0;
 
   this.initChecksumTable();
   this.initCodec();
   this.initResampler();
-  this.generateIdPage();
-  this.generateCommentPage();
 
   if ( this.config.numberOfChannels === 1 ) {
     this.interleave = function( buffers ) { return buffers[0]; };
@@ -101,25 +124,53 @@ OggOpusEncoder.prototype.encode = function( buffers ) {
       var packetLength = this._opus_encode_float( this.encoder, this.encoderBufferPointer, this.encoderSamplesPerChannel, this.encoderOutputPointer, this.encoderOutputMaxLength );
       this.segmentPacket( packetLength );
       this.resampleBufferIndex = 0;
-    }
-  }
 
-  this.buffersInPage++;
-  if ( this.buffersInPage >= this.config.maxBuffersPerPage ) {
-    this.generatePage();
+      this.framesInPage++;
+      if ( this.framesInPage >= this.config.maxFramesPerPage ) {
+        this.generatePage();
+      }
+    }
   }
 };
 
-OggOpusEncoder.prototype.encodeFinalFrame = function() {
-  var finalFrameBuffers = [];
-  for ( var i = 0; i < this.config.numberOfChannels; ++i ) {
-    finalFrameBuffers.push( new Float32Array( this.config.bufferLength - (this.resampleBufferIndex / this.config.numberOfChannels) ));
+OggOpusEncoder.prototype.destroy = function() {
+  if ( this.encoder ) {
+    this._free(this.encoderSamplesPerChannelPointer);
+    delete this.encoderSamplesPerChannelPointer;
+    this._free(this.encoderBufferPointer);
+    delete this.encoderBufferPointer;
+    this._free(this.encoderOutputPointer);
+    delete this.encoderOutputPointer;
+    this._free(this.resampleSamplesPerChannelPointer);
+    delete this.resampleSamplesPerChannelPointer;
+    this._free(this.resampleBufferPointer);
+    delete this.resampleBufferPointer;
+    this._speex_resampler_destroy(this.resampler);
+    delete this.resampler;
+    this._opus_encoder_destroy(this.encoder);
+    delete this.encoder;
   }
-  this.encode( finalFrameBuffers );
+};
+
+OggOpusEncoder.prototype.flush = function() {
+  if ( this.framesInPage ) {
+    this.generatePage();
+  }
+  // discard any pending data in resample buffer (only a few ms worth)
+  this.resampleBufferIndex = 0;
+  global['postMessage']( {message: 'flushed'} );
+};
+
+OggOpusEncoder.prototype.encodeFinalFrame = function() {
+  if ( this.resampleBufferIndex > 0 ) {
+    var finalFrameBuffers = [];
+    for ( var i = 0; i < this.config.numberOfChannels; ++i ) {
+      finalFrameBuffers.push( new Float32Array( this.config.bufferLength - (this.resampleBufferIndex / this.config.numberOfChannels) ));
+    }
+    this.encode( finalFrameBuffers );
+  }
   this.headerType += 4;
   this.generatePage();
-  global['postMessage'](null);
-  global['close']();
 };
 
 OggOpusEncoder.prototype.getChecksum = function( data ){
@@ -171,10 +222,14 @@ OggOpusEncoder.prototype.generatePage = function(){
   pageBufferView.setUint8( 4, 0, true ); // Version
   pageBufferView.setUint8( 5, this.headerType, true ); // 1 = continuation, 2 = beginning of stream, 4 = end of stream
 
-  // Number of samples upto and including this page at 48000Hz, into 64 bits
+  // Number of samples upto and including this page at 48000Hz, into signed 64 bit Little Endian integer
+  // Javascript Number maximum value is 53 bits or 2^53 - 1 
   pageBufferView.setUint32( 6, granulePosition, true );
-  if ( granulePosition > 4294967296 || granulePosition < 0 ) {
-    pageBufferView.setUint32( 10, Math.floor( granulePosition/4294967296 ), true );
+  if (granulePosition < 0) {
+    pageBufferView.setInt32( 10, Math.ceil(granulePosition/4294967297) - 1, true );
+  }
+  else {
+    pageBufferView.setInt32( 10, Math.floor(granulePosition/4294967296), true );
   }
 
   pageBufferView.setUint32( 14, this.config.serial, true ); // Bitstream serial number
@@ -184,10 +239,10 @@ OggOpusEncoder.prototype.generatePage = function(){
   page.set( this.segmentData.subarray(0, this.segmentDataIndex), 27 + this.segmentTableIndex ); // Segment Data
   pageBufferView.setUint32( 22, this.getChecksum( page ), true ); // Checksum
 
-  global['postMessage']( page, [page.buffer] );
+  global['postMessage']( {message: 'page', page: page, samplePosition: this.granulePosition}, [page.buffer] );
   this.segmentTableIndex = 0;
   this.segmentDataIndex = 0;
-  this.buffersInPage = 0;
+  this.framesInPage = 0;
   if ( granulePosition > 0 ) {
     this.lastPositiveGranulePosition = granulePosition;
   }

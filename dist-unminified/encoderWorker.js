@@ -1,3 +1,8 @@
+// Copyright 2010 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
+
 // The Module object: Our interface to the outside world. We import
 // and export values on it. There are various ways Module can be used:
 // 1. Not defined. We create it here
@@ -63,12 +68,32 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, {
-/******/ 				configurable: false,
-/******/ 				enumerable: true,
-/******/ 				get: getter
-/******/ 			});
+/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
 /******/ 		}
+/******/ 	};
+/******/
+/******/ 	// define __esModule on exports
+/******/ 	__webpack_require__.r = function(exports) {
+/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
+/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
+/******/ 		}
+/******/ 		Object.defineProperty(exports, '__esModule', { value: true });
+/******/ 	};
+/******/
+/******/ 	// create a fake namespace object
+/******/ 	// mode & 1: value is a module id, require it
+/******/ 	// mode & 2: merge all properties of value into the ns
+/******/ 	// mode & 4: return value when already ns object
+/******/ 	// mode & 8|1: behave like require
+/******/ 	__webpack_require__.t = function(value, mode) {
+/******/ 		if(mode & 1) value = __webpack_require__(value);
+/******/ 		if(mode & 8) return value;
+/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
+/******/ 		var ns = Object.create(null);
+/******/ 		__webpack_require__.r(ns);
+/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
+/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
+/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -86,348 +111,37 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
 /******/
+/******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = "./src/encoderWorker.js");
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ "./node_modules/webpack/buildin/global.js":
+/*!***********************************!*\
+  !*** (webpack)/buildin/global.js ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("var g;\n\n// This works in non-strict mode\ng = (function() {\n\treturn this;\n})();\n\ntry {\n\t// This works if eval is allowed (see CSP)\n\tg = g || new Function(\"return this\")();\n} catch (e) {\n\t// This works if the window reference is available\n\tif (typeof window === \"object\") g = window;\n}\n\n// g can still be undefined, but nothing to do about it...\n// We return undefined, instead of nothing here, so it's\n// easier to handle this case. if(!global) { ...}\n\nmodule.exports = g;\n//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9ub2RlX21vZHVsZXMvd2VicGFjay9idWlsZGluL2dsb2JhbC5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL0VuY29kZXJXb3JrZXIvKHdlYnBhY2spL2J1aWxkaW4vZ2xvYmFsLmpzP2NkMDAiXSwic291cmNlc0NvbnRlbnQiOlsidmFyIGc7XG5cbi8vIFRoaXMgd29ya3MgaW4gbm9uLXN0cmljdCBtb2RlXG5nID0gKGZ1bmN0aW9uKCkge1xuXHRyZXR1cm4gdGhpcztcbn0pKCk7XG5cbnRyeSB7XG5cdC8vIFRoaXMgd29ya3MgaWYgZXZhbCBpcyBhbGxvd2VkIChzZWUgQ1NQKVxuXHRnID0gZyB8fCBuZXcgRnVuY3Rpb24oXCJyZXR1cm4gdGhpc1wiKSgpO1xufSBjYXRjaCAoZSkge1xuXHQvLyBUaGlzIHdvcmtzIGlmIHRoZSB3aW5kb3cgcmVmZXJlbmNlIGlzIGF2YWlsYWJsZVxuXHRpZiAodHlwZW9mIHdpbmRvdyA9PT0gXCJvYmplY3RcIikgZyA9IHdpbmRvdztcbn1cblxuLy8gZyBjYW4gc3RpbGwgYmUgdW5kZWZpbmVkLCBidXQgbm90aGluZyB0byBkbyBhYm91dCBpdC4uLlxuLy8gV2UgcmV0dXJuIHVuZGVmaW5lZCwgaW5zdGVhZCBvZiBub3RoaW5nIGhlcmUsIHNvIGl0J3Ncbi8vIGVhc2llciB0byBoYW5kbGUgdGhpcyBjYXNlLiBpZighZ2xvYmFsKSB7IC4uLn1cblxubW9kdWxlLmV4cG9ydHMgPSBnO1xuIl0sIm1hcHBpbmdzIjoiQUFBQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBOyIsInNvdXJjZVJvb3QiOiIifQ==\n//# sourceURL=webpack-internal:///./node_modules/webpack/buildin/global.js\n");
+
+/***/ }),
+
+/***/ "./src/encoderWorker.js":
+/*!******************************!*\
+  !*** ./src/encoderWorker.js ***!
+  \******************************/
+/*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {
-
-var encoder;
-var mainReadyResolve;
-var mainReady = new Promise(function(resolve){ mainReadyResolve = resolve; });
-
-global['onmessage'] = function( e ){
-  mainReady.then(function(){
-    switch( e['data']['command'] ){
-
-      case 'encode':
-        if (encoder){
-          encoder.encode( e['data']['buffers'] );
-        }
-        break;
-
-      case 'done':
-        if (encoder) {
-          encoder.encodeFinalFrame();
-        }
-        break;
-
-      case 'init':
-        encoder = new OggOpusEncoder( e['data'], Module );
-        break;
-
-      default:
-        // Ignore any unknown commands and continue recieving commands
-    }
-  });
-};
-
-
-var OggOpusEncoder = function( config, Module ){
-
-  if ( !Module ) {
-    throw new Error('Module with exports required to initialize an encoder instance');
-  }
-
-  this.config = Object.assign({ 
-    bufferLength: 4096, // Define size of incoming buffer
-    encoderApplication: 2049, // 2048 = Voice (Lower fidelity)
-                              // 2049 = Full Band Audio (Highest fidelity)
-                              // 2051 = Restricted Low Delay (Lowest latency)
-    encoderFrameSize: 20, // Specified in ms.
-    encoderSampleRate: 48000, // Desired encoding sample rate. Audio will be resampled
-    maxBuffersPerPage: 40, // Tradeoff latency with overhead
-    numberOfChannels: 1,
-    originalSampleRate: 44100,
-    resampleQuality: 3, // Value between 0 and 10 inclusive. 10 being highest quality.
-    serial: Math.floor( Math.random() * Math.pow(2,32) )
-  }, config );
-
-  this._opus_encoder_create = Module._opus_encoder_create;
-  this._opus_encoder_ctl = Module._opus_encoder_ctl;
-  this._speex_resampler_process_interleaved_float = Module._speex_resampler_process_interleaved_float;
-  this._speex_resampler_init = Module._speex_resampler_init;
-  this._opus_encode_float = Module._opus_encode_float;
-  this._free = Module._free;
-  this._malloc = Module._malloc;
-  this.HEAPU8 = Module.HEAPU8;
-  this.HEAP32 = Module.HEAP32;
-  this.HEAPF32 = Module.HEAPF32;
-
-  this.pageIndex = 0;
-  this.granulePosition = 0;
-  this.segmentData = new Uint8Array( 65025 ); // Maximum length of oggOpus data
-  this.segmentDataIndex = 0;
-  this.segmentTable = new Uint8Array( 255 ); // Maximum data segments
-  this.segmentTableIndex = 0;
-  this.buffersInPage = 0;
-
-  this.initChecksumTable();
-  this.initCodec();
-  this.initResampler();
-  this.generateIdPage();
-  this.generateCommentPage();
-
-  if ( this.config.numberOfChannels === 1 ) {
-    this.interleave = function( buffers ) { return buffers[0]; };
-  }
-  else {
-    this.interleavedBuffers = new Float32Array( this.config.bufferLength * this.config.numberOfChannels );
-  }
-
-};
-
-OggOpusEncoder.prototype.encode = function( buffers ) {
-  var samples = this.interleave( buffers );
-  var sampleIndex = 0;
-
-  while ( sampleIndex < samples.length ) {
-
-    var lengthToCopy = Math.min( this.resampleBufferLength - this.resampleBufferIndex, samples.length - sampleIndex );
-    this.resampleBuffer.set( samples.subarray( sampleIndex, sampleIndex+lengthToCopy ), this.resampleBufferIndex );
-    sampleIndex += lengthToCopy;
-    this.resampleBufferIndex += lengthToCopy;
-
-    if ( this.resampleBufferIndex === this.resampleBufferLength ) {
-      this._speex_resampler_process_interleaved_float( this.resampler, this.resampleBufferPointer, this.resampleSamplesPerChannelPointer, this.encoderBufferPointer, this.encoderSamplesPerChannelPointer );
-      var packetLength = this._opus_encode_float( this.encoder, this.encoderBufferPointer, this.encoderSamplesPerChannel, this.encoderOutputPointer, this.encoderOutputMaxLength );
-      this.segmentPacket( packetLength );
-      this.resampleBufferIndex = 0;
-    }
-  }
-
-  this.buffersInPage++;
-  if ( this.buffersInPage >= this.config.maxBuffersPerPage ) {
-    this.generatePage();
-  }
-};
-
-OggOpusEncoder.prototype.encodeFinalFrame = function() {
-  var finalFrameBuffers = [];
-  for ( var i = 0; i < this.config.numberOfChannels; ++i ) {
-    finalFrameBuffers.push( new Float32Array( this.config.bufferLength - (this.resampleBufferIndex / this.config.numberOfChannels) ));
-  }
-  this.encode( finalFrameBuffers );
-  this.headerType += 4;
-  this.generatePage();
-  global['postMessage'](null);
-  global['close']();
-};
-
-OggOpusEncoder.prototype.getChecksum = function( data ){
-  var checksum = 0;
-  for ( var i = 0; i < data.length; i++ ) {
-    checksum = (checksum << 8) ^ this.checksumTable[ ((checksum>>>24) & 0xff) ^ data[i] ];
-  }
-  return checksum >>> 0;
-};
-
-OggOpusEncoder.prototype.generateCommentPage = function(){
-  var segmentDataView = new DataView( this.segmentData.buffer );
-  segmentDataView.setUint32( 0, 1937076303, true ) // Magic Signature 'Opus'
-  segmentDataView.setUint32( 4, 1936154964, true ) // Magic Signature 'Tags'
-  segmentDataView.setUint32( 8, 10, true ); // Vendor Length
-  segmentDataView.setUint32( 12, 1868784978, true ); // Vendor name 'Reco'
-  segmentDataView.setUint32( 16, 1919247474, true ); // Vendor name 'rder'
-  segmentDataView.setUint16( 20, 21322, true ); // Vendor name 'JS'
-  segmentDataView.setUint32( 22, 0, true ); // User Comment List Length
-  this.segmentTableIndex = 1;
-  this.segmentDataIndex = this.segmentTable[0] = 26;
-  this.headerType = 0;
-  this.generatePage();
-};
-
-OggOpusEncoder.prototype.generateIdPage = function(){
-  var segmentDataView = new DataView( this.segmentData.buffer );
-  segmentDataView.setUint32( 0, 1937076303, true ) // Magic Signature 'Opus'
-  segmentDataView.setUint32( 4, 1684104520, true ) // Magic Signature 'Head'
-  segmentDataView.setUint8( 8, 1, true ); // Version
-  segmentDataView.setUint8( 9, this.config.numberOfChannels, true ); // Channel count
-  segmentDataView.setUint16( 10, 3840, true ); // pre-skip (80ms)
-  segmentDataView.setUint32( 12, this.config.originalSampleRateOverride || this.config.originalSampleRate, true ); // original sample rate
-  segmentDataView.setUint16( 16, 0, true ); // output gain
-  segmentDataView.setUint8( 18, 0, true ); // channel map 0 = mono or stereo
-  this.segmentTableIndex = 1;
-  this.segmentDataIndex = this.segmentTable[0] = 19;
-  this.headerType = 2;
-  this.generatePage();
-};
-
-OggOpusEncoder.prototype.generatePage = function(){
-  var granulePosition = ( this.lastPositiveGranulePosition === this.granulePosition) ? -1 : this.granulePosition;
-  var pageBuffer = new ArrayBuffer(  27 + this.segmentTableIndex + this.segmentDataIndex );
-  var pageBufferView = new DataView( pageBuffer );
-  var page = new Uint8Array( pageBuffer );
-
-  pageBufferView.setUint32( 0, 1399285583, true); // Capture Pattern starts all page headers 'OggS'
-  pageBufferView.setUint8( 4, 0, true ); // Version
-  pageBufferView.setUint8( 5, this.headerType, true ); // 1 = continuation, 2 = beginning of stream, 4 = end of stream
-
-  // Number of samples upto and including this page at 48000Hz, into 64 bits
-  pageBufferView.setUint32( 6, granulePosition, true );
-  if ( granulePosition > 4294967296 || granulePosition < 0 ) {
-    pageBufferView.setUint32( 10, Math.floor( granulePosition/4294967296 ), true );
-  }
-
-  pageBufferView.setUint32( 14, this.config.serial, true ); // Bitstream serial number
-  pageBufferView.setUint32( 18, this.pageIndex++, true ); // Page sequence number
-  pageBufferView.setUint8( 26, this.segmentTableIndex, true ); // Number of segments in page.
-  page.set( this.segmentTable.subarray(0, this.segmentTableIndex), 27 ); // Segment Table
-  page.set( this.segmentData.subarray(0, this.segmentDataIndex), 27 + this.segmentTableIndex ); // Segment Data
-  pageBufferView.setUint32( 22, this.getChecksum( page ), true ); // Checksum
-
-  global['postMessage']( page, [page.buffer] );
-  this.segmentTableIndex = 0;
-  this.segmentDataIndex = 0;
-  this.buffersInPage = 0;
-  if ( granulePosition > 0 ) {
-    this.lastPositiveGranulePosition = granulePosition;
-  }
-};
-
-OggOpusEncoder.prototype.initChecksumTable = function(){
-  this.checksumTable = [];
-  for ( var i = 0; i < 256; i++ ) {
-    var r = i << 24;
-    for ( var j = 0; j < 8; j++ ) {
-      r = ((r & 0x80000000) != 0) ? ((r << 1) ^ 0x04c11db7) : (r << 1);
-    }
-    this.checksumTable[i] = (r & 0xffffffff);
-  }
-};
-
-OggOpusEncoder.prototype.setOpusControl = function( control, value ){
-  var location = this._malloc( 4 );
-  this.HEAP32[ location >> 2 ] = value;
-  this._opus_encoder_ctl( this.encoder, control, location );
-  this._free( location );
-};
-
-OggOpusEncoder.prototype.initCodec = function() {
-  var errLocation = this._malloc( 4 );
-  this.encoder = this._opus_encoder_create( this.config.encoderSampleRate, this.config.numberOfChannels, this.config.encoderApplication, errLocation );
-  this._free( errLocation );
-
-  if ( this.config.encoderBitRate ) {
-    this.setOpusControl( 4002, this.config.encoderBitRate );
-  }
-
-  if ( this.config.encoderComplexity ) {
-    this.setOpusControl( 4010, this.config.encoderComplexity );
-  }
-
-  this.encoderSamplesPerChannel = this.config.encoderSampleRate * this.config.encoderFrameSize / 1000;
-  this.encoderSamplesPerChannelPointer = this._malloc( 4 );
-  this.HEAP32[ this.encoderSamplesPerChannelPointer >> 2 ] = this.encoderSamplesPerChannel;
-
-  this.encoderBufferLength = this.encoderSamplesPerChannel * this.config.numberOfChannels;
-  this.encoderBufferPointer = this._malloc( this.encoderBufferLength * 4 ); // 4 bytes per sample
-  this.encoderBuffer = this.HEAPF32.subarray( this.encoderBufferPointer >> 2, (this.encoderBufferPointer >> 2) + this.encoderBufferLength );
-
-  this.encoderOutputMaxLength = 4000;
-  this.encoderOutputPointer = this._malloc( this.encoderOutputMaxLength );
-  this.encoderOutputBuffer = this.HEAPU8.subarray( this.encoderOutputPointer, this.encoderOutputPointer + this.encoderOutputMaxLength );
-};
-
-OggOpusEncoder.prototype.initResampler = function() {
-  var errLocation = this._malloc( 4 );
-  this.resampler = this._speex_resampler_init( this.config.numberOfChannels, this.config.originalSampleRate, this.config.encoderSampleRate, this.config.resampleQuality, errLocation );
-  this._free( errLocation );
-
-  this.resampleBufferIndex = 0;
-  this.resampleSamplesPerChannel = this.config.originalSampleRate * this.config.encoderFrameSize / 1000;
-  this.resampleSamplesPerChannelPointer = this._malloc( 4 );
-  this.HEAP32[ this.resampleSamplesPerChannelPointer >> 2 ] = this.resampleSamplesPerChannel;
-
-  this.resampleBufferLength = this.resampleSamplesPerChannel * this.config.numberOfChannels;
-  this.resampleBufferPointer = this._malloc( this.resampleBufferLength * 4 ); // 4 bytes per sample
-  this.resampleBuffer = this.HEAPF32.subarray( this.resampleBufferPointer >> 2, (this.resampleBufferPointer >> 2) + this.resampleBufferLength );
-};
-
-OggOpusEncoder.prototype.interleave = function( buffers ) {
-  for ( var i = 0; i < this.config.bufferLength; i++ ) {
-    for ( var channel = 0; channel < this.config.numberOfChannels; channel++ ) {
-      this.interleavedBuffers[ i * this.config.numberOfChannels + channel ] = buffers[ channel ][ i ];
-    }
-  }
-
-  return this.interleavedBuffers;
-};
-
-OggOpusEncoder.prototype.segmentPacket = function( packetLength ) {
-  var packetIndex = 0;
-
-  while ( packetLength >= 0 ) {
-
-    if ( this.segmentTableIndex === 255 ) {
-      this.generatePage();
-      this.headerType = 1;
-    }
-
-    var segmentLength = Math.min( packetLength, 255 );
-    this.segmentTable[ this.segmentTableIndex++ ] = segmentLength;
-    var segment = this.encoderOutputBuffer.subarray( packetIndex, packetIndex + segmentLength );
-    this.segmentData.set(segment , this.segmentDataIndex );
-    global['postMessage']({type: 'opus', data: segment});
-    this.segmentDataIndex += segmentLength;
-    packetIndex += segmentLength;
-    packetLength -= 255;
-  }
-
-  this.granulePosition += ( 48 * this.config.encoderFrameSize );
-  if ( this.segmentTableIndex === 255 ) {
-    this.generatePage();
-    this.headerType = 0;
-  }
-};
-
-
-if (!Module) {
-  Module = {};
-}
-
-Module['mainReady'] = mainReady;
-Module['OggOpusEncoder'] = OggOpusEncoder;
-Module['onRuntimeInitialized'] = mainReadyResolve;
-
-module.exports = Module;
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1)))
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
+eval("/* WEBPACK VAR INJECTION */(function(global) {\n\nvar encoder;\nvar mainReadyResolve;\nvar mainReady = new Promise(function(resolve){ mainReadyResolve = resolve; });\n\nglobal['onmessage'] = function( e ){\n  mainReady.then(function(){\n    switch( e['data']['command'] ){\n\n      case 'encode':\n        console.log('encode message, ' + encoder);\n        if (encoder){\n          encoder.encode( e['data']['buffers'] );\n        }\n        break;\n\n      case 'getHeaderPages':\n        if (encoder){\n          encoder.generateIdPage();\n          encoder.generateCommentPage();\n        }\n        break;\n\n      case 'done':\n        if (encoder) {\n          encoder.encodeFinalFrame();\n          global['postMessage']( {message: 'done'} );\n        }\n        break;\n\n      case 'close':\n        global['close']();\n        break;\n\n      case 'flush':\n        if (encoder) {\n          encoder.flush();\n        }\n        break;\n\n      case 'init':\n        if ( encoder ) {\n          encoder.destroy();\n        }\n        encoder = new OggOpusEncoder( e['data'], Module );\n        global['postMessage']( {message: 'ready'} );\n        break;\n\n      default:\n        // Ignore any unknown commands and continue recieving commands\n    }\n  });\n};\n\n\nvar OggOpusEncoder = function( config, Module ){\n\n  if ( !Module ) {\n    throw new Error('Module with exports required to initialize an encoder instance');\n  }\n\n  this.config = Object.assign({ \n    bufferLength: 4096, // Define size of incoming buffer\n    encoderApplication: 2049, // 2048 = Voice (Lower fidelity)\n                              // 2049 = Full Band Audio (Highest fidelity)\n                              // 2051 = Restricted Low Delay (Lowest latency)\n    encoderFrameSize: 20, // Specified in ms.\n    encoderSampleRate: 48000, // Desired encoding sample rate. Audio will be resampled\n    maxFramesPerPage: 40, // Tradeoff latency with overhead\n    numberOfChannels: 1,\n    originalSampleRate: 44100,\n    resampleQuality: 3, // Value between 0 and 10 inclusive. 10 being highest quality.\n    serial: Math.floor(Math.random() * 4294967296)\n  }, config );\n\n  this._opus_encoder_create = Module._opus_encoder_create;\n  this._opus_encoder_destroy = Module._opus_encoder_destroy;\n  this._opus_encoder_ctl = Module._opus_encoder_ctl;\n  this._speex_resampler_process_interleaved_float = Module._speex_resampler_process_interleaved_float;\n  this._speex_resampler_init = Module._speex_resampler_init;\n  this._speex_resampler_destroy = Module._speex_resampler_destroy;\n  this._opus_encode_float = Module._opus_encode_float;\n  this._free = Module._free;\n  this._malloc = Module._malloc;\n  this.HEAPU8 = Module.HEAPU8;\n  this.HEAP32 = Module.HEAP32;\n  this.HEAPF32 = Module.HEAPF32;\n\n  this.pageIndex = 0;\n  this.granulePosition = 0;\n  this.segmentData = new Uint8Array( 65025 ); // Maximum length of oggOpus data\n  this.segmentDataIndex = 0;\n  this.segmentTable = new Uint8Array( 255 ); // Maximum data segments\n  this.segmentTableIndex = 0;\n  this.framesInPage = 0;\n\n  this.initChecksumTable();\n  this.initCodec();\n  this.initResampler();\n\n  if ( this.config.numberOfChannels === 1 ) {\n    this.interleave = function( buffers ) { return buffers[0]; };\n  }\n  else {\n    this.interleavedBuffers = new Float32Array( this.config.bufferLength * this.config.numberOfChannels );\n  }\n\n};\n\nOggOpusEncoder.prototype.encode = function( buffers ) {\n  var samples = this.interleave( buffers );\n  var sampleIndex = 0;\n\n  while ( sampleIndex < samples.length ) {\n\n    var lengthToCopy = Math.min( this.resampleBufferLength - this.resampleBufferIndex, samples.length - sampleIndex );\n    this.resampleBuffer.set( samples.subarray( sampleIndex, sampleIndex+lengthToCopy ), this.resampleBufferIndex );\n    sampleIndex += lengthToCopy;\n    this.resampleBufferIndex += lengthToCopy;\n\n    if ( this.resampleBufferIndex === this.resampleBufferLength ) {\n      this._speex_resampler_process_interleaved_float( this.resampler, this.resampleBufferPointer, this.resampleSamplesPerChannelPointer, this.encoderBufferPointer, this.encoderSamplesPerChannelPointer );\n      var packetLength = this._opus_encode_float( this.encoder, this.encoderBufferPointer, this.encoderSamplesPerChannel, this.encoderOutputPointer, this.encoderOutputMaxLength );\n      this.segmentPacket( packetLength );\n      this.resampleBufferIndex = 0;\n\n      this.framesInPage++;\n      if ( this.framesInPage >= this.config.maxFramesPerPage ) {\n        this.generatePage();\n      }\n    }\n  }\n};\n\nOggOpusEncoder.prototype.destroy = function() {\n  if ( this.encoder ) {\n    this._free(this.encoderSamplesPerChannelPointer);\n    delete this.encoderSamplesPerChannelPointer;\n    this._free(this.encoderBufferPointer);\n    delete this.encoderBufferPointer;\n    this._free(this.encoderOutputPointer);\n    delete this.encoderOutputPointer;\n    this._free(this.resampleSamplesPerChannelPointer);\n    delete this.resampleSamplesPerChannelPointer;\n    this._free(this.resampleBufferPointer);\n    delete this.resampleBufferPointer;\n    this._speex_resampler_destroy(this.resampler);\n    delete this.resampler;\n    this._opus_encoder_destroy(this.encoder);\n    delete this.encoder;\n  }\n};\n\nOggOpusEncoder.prototype.flush = function() {\n  if ( this.framesInPage ) {\n    this.generatePage();\n  }\n  // discard any pending data in resample buffer (only a few ms worth)\n  this.resampleBufferIndex = 0;\n  global['postMessage']( {message: 'flushed'} );\n};\n\nOggOpusEncoder.prototype.encodeFinalFrame = function() {\n  if ( this.resampleBufferIndex > 0 ) {\n    var finalFrameBuffers = [];\n    for ( var i = 0; i < this.config.numberOfChannels; ++i ) {\n      finalFrameBuffers.push( new Float32Array( this.config.bufferLength - (this.resampleBufferIndex / this.config.numberOfChannels) ));\n    }\n    this.encode( finalFrameBuffers );\n  }\n  this.headerType += 4;\n  this.generatePage();\n};\n\nOggOpusEncoder.prototype.getChecksum = function( data ){\n  var checksum = 0;\n  for ( var i = 0; i < data.length; i++ ) {\n    checksum = (checksum << 8) ^ this.checksumTable[ ((checksum>>>24) & 0xff) ^ data[i] ];\n  }\n  return checksum >>> 0;\n};\n\nOggOpusEncoder.prototype.generateCommentPage = function(){\n  var segmentDataView = new DataView( this.segmentData.buffer );\n  segmentDataView.setUint32( 0, 1937076303, true ) // Magic Signature 'Opus'\n  segmentDataView.setUint32( 4, 1936154964, true ) // Magic Signature 'Tags'\n  segmentDataView.setUint32( 8, 10, true ); // Vendor Length\n  segmentDataView.setUint32( 12, 1868784978, true ); // Vendor name 'Reco'\n  segmentDataView.setUint32( 16, 1919247474, true ); // Vendor name 'rder'\n  segmentDataView.setUint16( 20, 21322, true ); // Vendor name 'JS'\n  segmentDataView.setUint32( 22, 0, true ); // User Comment List Length\n  this.segmentTableIndex = 1;\n  this.segmentDataIndex = this.segmentTable[0] = 26;\n  this.headerType = 0;\n  this.generatePage();\n};\n\nOggOpusEncoder.prototype.generateIdPage = function(){\n  var segmentDataView = new DataView( this.segmentData.buffer );\n  segmentDataView.setUint32( 0, 1937076303, true ) // Magic Signature 'Opus'\n  segmentDataView.setUint32( 4, 1684104520, true ) // Magic Signature 'Head'\n  segmentDataView.setUint8( 8, 1, true ); // Version\n  segmentDataView.setUint8( 9, this.config.numberOfChannels, true ); // Channel count\n  segmentDataView.setUint16( 10, 3840, true ); // pre-skip (80ms)\n  segmentDataView.setUint32( 12, this.config.originalSampleRateOverride || this.config.originalSampleRate, true ); // original sample rate\n  segmentDataView.setUint16( 16, 0, true ); // output gain\n  segmentDataView.setUint8( 18, 0, true ); // channel map 0 = mono or stereo\n  this.segmentTableIndex = 1;\n  this.segmentDataIndex = this.segmentTable[0] = 19;\n  this.headerType = 2;\n  this.generatePage();\n};\n\nOggOpusEncoder.prototype.generatePage = function(){\n  var granulePosition = ( this.lastPositiveGranulePosition === this.granulePosition) ? -1 : this.granulePosition;\n  var pageBuffer = new ArrayBuffer(  27 + this.segmentTableIndex + this.segmentDataIndex );\n  var pageBufferView = new DataView( pageBuffer );\n  var page = new Uint8Array( pageBuffer );\n\n  pageBufferView.setUint32( 0, 1399285583, true); // Capture Pattern starts all page headers 'OggS'\n  pageBufferView.setUint8( 4, 0, true ); // Version\n  pageBufferView.setUint8( 5, this.headerType, true ); // 1 = continuation, 2 = beginning of stream, 4 = end of stream\n\n  // Number of samples upto and including this page at 48000Hz, into signed 64 bit Little Endian integer\n  // Javascript Number maximum value is 53 bits or 2^53 - 1 \n  pageBufferView.setUint32( 6, granulePosition, true );\n  if (granulePosition < 0) {\n    pageBufferView.setInt32( 10, Math.ceil(granulePosition/4294967297) - 1, true );\n  }\n  else {\n    pageBufferView.setInt32( 10, Math.floor(granulePosition/4294967296), true );\n  }\n\n  pageBufferView.setUint32( 14, this.config.serial, true ); // Bitstream serial number\n  pageBufferView.setUint32( 18, this.pageIndex++, true ); // Page sequence number\n  pageBufferView.setUint8( 26, this.segmentTableIndex, true ); // Number of segments in page.\n  page.set( this.segmentTable.subarray(0, this.segmentTableIndex), 27 ); // Segment Table\n  page.set( this.segmentData.subarray(0, this.segmentDataIndex), 27 + this.segmentTableIndex ); // Segment Data\n  pageBufferView.setUint32( 22, this.getChecksum( page ), true ); // Checksum\n\n  global['postMessage']( {message: 'page', page: page, samplePosition: this.granulePosition}, [page.buffer] );\n  this.segmentTableIndex = 0;\n  this.segmentDataIndex = 0;\n  this.framesInPage = 0;\n  if ( granulePosition > 0 ) {\n    this.lastPositiveGranulePosition = granulePosition;\n  }\n};\n\nOggOpusEncoder.prototype.initChecksumTable = function(){\n  this.checksumTable = [];\n  for ( var i = 0; i < 256; i++ ) {\n    var r = i << 24;\n    for ( var j = 0; j < 8; j++ ) {\n      r = ((r & 0x80000000) != 0) ? ((r << 1) ^ 0x04c11db7) : (r << 1);\n    }\n    this.checksumTable[i] = (r & 0xffffffff);\n  }\n};\n\nOggOpusEncoder.prototype.setOpusControl = function( control, value ){\n  var location = this._malloc( 4 );\n  this.HEAP32[ location >> 2 ] = value;\n  this._opus_encoder_ctl( this.encoder, control, location );\n  this._free( location );\n};\n\nOggOpusEncoder.prototype.initCodec = function() {\n  var errLocation = this._malloc( 4 );\n  this.encoder = this._opus_encoder_create( this.config.encoderSampleRate, this.config.numberOfChannels, this.config.encoderApplication, errLocation );\n  this._free( errLocation );\n\n  if ( this.config.encoderBitRate ) {\n    this.setOpusControl( 4002, this.config.encoderBitRate );\n  }\n\n  if ( this.config.encoderComplexity ) {\n    this.setOpusControl( 4010, this.config.encoderComplexity );\n  }\n\n  this.encoderSamplesPerChannel = this.config.encoderSampleRate * this.config.encoderFrameSize / 1000;\n  this.encoderSamplesPerChannelPointer = this._malloc( 4 );\n  this.HEAP32[ this.encoderSamplesPerChannelPointer >> 2 ] = this.encoderSamplesPerChannel;\n\n  this.encoderBufferLength = this.encoderSamplesPerChannel * this.config.numberOfChannels;\n  this.encoderBufferPointer = this._malloc( this.encoderBufferLength * 4 ); // 4 bytes per sample\n  this.encoderBuffer = this.HEAPF32.subarray( this.encoderBufferPointer >> 2, (this.encoderBufferPointer >> 2) + this.encoderBufferLength );\n\n  this.encoderOutputMaxLength = 4000;\n  this.encoderOutputPointer = this._malloc( this.encoderOutputMaxLength );\n  this.encoderOutputBuffer = this.HEAPU8.subarray( this.encoderOutputPointer, this.encoderOutputPointer + this.encoderOutputMaxLength );\n};\n\nOggOpusEncoder.prototype.initResampler = function() {\n  var errLocation = this._malloc( 4 );\n  this.resampler = this._speex_resampler_init( this.config.numberOfChannels, this.config.originalSampleRate, this.config.encoderSampleRate, this.config.resampleQuality, errLocation );\n  this._free( errLocation );\n\n  this.resampleBufferIndex = 0;\n  this.resampleSamplesPerChannel = this.config.originalSampleRate * this.config.encoderFrameSize / 1000;\n  this.resampleSamplesPerChannelPointer = this._malloc( 4 );\n  this.HEAP32[ this.resampleSamplesPerChannelPointer >> 2 ] = this.resampleSamplesPerChannel;\n\n  this.resampleBufferLength = this.resampleSamplesPerChannel * this.config.numberOfChannels;\n  this.resampleBufferPointer = this._malloc( this.resampleBufferLength * 4 ); // 4 bytes per sample\n  this.resampleBuffer = this.HEAPF32.subarray( this.resampleBufferPointer >> 2, (this.resampleBufferPointer >> 2) + this.resampleBufferLength );\n};\n\nOggOpusEncoder.prototype.interleave = function( buffers ) {\n  for ( var i = 0; i < this.config.bufferLength; i++ ) {\n    for ( var channel = 0; channel < this.config.numberOfChannels; channel++ ) {\n      this.interleavedBuffers[ i * this.config.numberOfChannels + channel ] = buffers[ channel ][ i ];\n    }\n  }\n\n  return this.interleavedBuffers;\n};\n\nOggOpusEncoder.prototype.segmentPacket = function( packetLength ) {\n  var packetIndex = 0;\n\n  while ( packetLength >= 0 ) {\n\n    if ( this.segmentTableIndex === 255 ) {\n      this.generatePage();\n      this.headerType = 1;\n    }\n\n    var segmentLength = Math.min( packetLength, 255 );\n    this.segmentTable[ this.segmentTableIndex++ ] = segmentLength;\n    var segment = this.encoderOutputBuffer.subarray( packetIndex, packetIndex + segmentLength );\n    this.segmentData.set(segment , this.segmentDataIndex );\n    global['postMessage']({type: 'opus', data: segment});\n    this.segmentDataIndex += segmentLength;\n    packetIndex += segmentLength;\n    packetLength -= 255;\n  }\n\n  this.granulePosition += ( 48 * this.config.encoderFrameSize );\n  if ( this.segmentTableIndex === 255 ) {\n    this.generatePage();\n    this.headerType = 0;\n  }\n};\n\n\nif (!Module) {\n  Module = {};\n}\n\nModule['mainReady'] = mainReady;\nModule['OggOpusEncoder'] = OggOpusEncoder;\nModule['onRuntimeInitialized'] = mainReadyResolve;\n\nmodule.exports = Module;\n\n/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../node_modules/webpack/buildin/global.js */ \"./node_modules/webpack/buildin/global.js\")))//# sourceURL=[module]\n//# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiLi9zcmMvZW5jb2Rlcldvcmtlci5qcy5qcyIsInNvdXJjZXMiOlsid2VicGFjazovL0VuY29kZXJXb3JrZXIvLi9zcmMvZW5jb2Rlcldvcmtlci5qcz84YjNjIl0sInNvdXJjZXNDb250ZW50IjpbIlwidXNlIHN0cmljdFwiO1xuXG52YXIgZW5jb2RlcjtcbnZhciBtYWluUmVhZHlSZXNvbHZlO1xudmFyIG1haW5SZWFkeSA9IG5ldyBQcm9taXNlKGZ1bmN0aW9uKHJlc29sdmUpeyBtYWluUmVhZHlSZXNvbHZlID0gcmVzb2x2ZTsgfSk7XG5cbmdsb2JhbFsnb25tZXNzYWdlJ10gPSBmdW5jdGlvbiggZSApe1xuICBtYWluUmVhZHkudGhlbihmdW5jdGlvbigpe1xuICAgIHN3aXRjaCggZVsnZGF0YSddWydjb21tYW5kJ10gKXtcblxuICAgICAgY2FzZSAnZW5jb2RlJzpcbiAgICAgICAgY29uc29sZS5sb2coJ2VuY29kZSBtZXNzYWdlLCAnICsgZW5jb2Rlcik7XG4gICAgICAgIGlmIChlbmNvZGVyKXtcbiAgICAgICAgICBlbmNvZGVyLmVuY29kZSggZVsnZGF0YSddWydidWZmZXJzJ10gKTtcbiAgICAgICAgfVxuICAgICAgICBicmVhaztcblxuICAgICAgY2FzZSAnZ2V0SGVhZGVyUGFnZXMnOlxuICAgICAgICBpZiAoZW5jb2Rlcil7XG4gICAgICAgICAgZW5jb2Rlci5nZW5lcmF0ZUlkUGFnZSgpO1xuICAgICAgICAgIGVuY29kZXIuZ2VuZXJhdGVDb21tZW50UGFnZSgpO1xuICAgICAgICB9XG4gICAgICAgIGJyZWFrO1xuXG4gICAgICBjYXNlICdkb25lJzpcbiAgICAgICAgaWYgKGVuY29kZXIpIHtcbiAgICAgICAgICBlbmNvZGVyLmVuY29kZUZpbmFsRnJhbWUoKTtcbiAgICAgICAgICBnbG9iYWxbJ3Bvc3RNZXNzYWdlJ10oIHttZXNzYWdlOiAnZG9uZSd9ICk7XG4gICAgICAgIH1cbiAgICAgICAgYnJlYWs7XG5cbiAgICAgIGNhc2UgJ2Nsb3NlJzpcbiAgICAgICAgZ2xvYmFsWydjbG9zZSddKCk7XG4gICAgICAgIGJyZWFrO1xuXG4gICAgICBjYXNlICdmbHVzaCc6XG4gICAgICAgIGlmIChlbmNvZGVyKSB7XG4gICAgICAgICAgZW5jb2Rlci5mbHVzaCgpO1xuICAgICAgICB9XG4gICAgICAgIGJyZWFrO1xuXG4gICAgICBjYXNlICdpbml0JzpcbiAgICAgICAgaWYgKCBlbmNvZGVyICkge1xuICAgICAgICAgIGVuY29kZXIuZGVzdHJveSgpO1xuICAgICAgICB9XG4gICAgICAgIGVuY29kZXIgPSBuZXcgT2dnT3B1c0VuY29kZXIoIGVbJ2RhdGEnXSwgTW9kdWxlICk7XG4gICAgICAgIGdsb2JhbFsncG9zdE1lc3NhZ2UnXSgge21lc3NhZ2U6ICdyZWFkeSd9ICk7XG4gICAgICAgIGJyZWFrO1xuXG4gICAgICBkZWZhdWx0OlxuICAgICAgICAvLyBJZ25vcmUgYW55IHVua25vd24gY29tbWFuZHMgYW5kIGNvbnRpbnVlIHJlY2lldmluZyBjb21tYW5kc1xuICAgIH1cbiAgfSk7XG59O1xuXG5cbnZhciBPZ2dPcHVzRW5jb2RlciA9IGZ1bmN0aW9uKCBjb25maWcsIE1vZHVsZSApe1xuXG4gIGlmICggIU1vZHVsZSApIHtcbiAgICB0aHJvdyBuZXcgRXJyb3IoJ01vZHVsZSB3aXRoIGV4cG9ydHMgcmVxdWlyZWQgdG8gaW5pdGlhbGl6ZSBhbiBlbmNvZGVyIGluc3RhbmNlJyk7XG4gIH1cblxuICB0aGlzLmNvbmZpZyA9IE9iamVjdC5hc3NpZ24oeyBcbiAgICBidWZmZXJMZW5ndGg6IDQwOTYsIC8vIERlZmluZSBzaXplIG9mIGluY29taW5nIGJ1ZmZlclxuICAgIGVuY29kZXJBcHBsaWNhdGlvbjogMjA0OSwgLy8gMjA0OCA9IFZvaWNlIChMb3dlciBmaWRlbGl0eSlcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC8vIDIwNDkgPSBGdWxsIEJhbmQgQXVkaW8gKEhpZ2hlc3QgZmlkZWxpdHkpXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAvLyAyMDUxID0gUmVzdHJpY3RlZCBMb3cgRGVsYXkgKExvd2VzdCBsYXRlbmN5KVxuICAgIGVuY29kZXJGcmFtZVNpemU6IDIwLCAvLyBTcGVjaWZpZWQgaW4gbXMuXG4gICAgZW5jb2RlclNhbXBsZVJhdGU6IDQ4MDAwLCAvLyBEZXNpcmVkIGVuY29kaW5nIHNhbXBsZSByYXRlLiBBdWRpbyB3aWxsIGJlIHJlc2FtcGxlZFxuICAgIG1heEZyYW1lc1BlclBhZ2U6IDQwLCAvLyBUcmFkZW9mZiBsYXRlbmN5IHdpdGggb3ZlcmhlYWRcbiAgICBudW1iZXJPZkNoYW5uZWxzOiAxLFxuICAgIG9yaWdpbmFsU2FtcGxlUmF0ZTogNDQxMDAsXG4gICAgcmVzYW1wbGVRdWFsaXR5OiAzLCAvLyBWYWx1ZSBiZXR3ZWVuIDAgYW5kIDEwIGluY2x1c2l2ZS4gMTAgYmVpbmcgaGlnaGVzdCBxdWFsaXR5LlxuICAgIHNlcmlhbDogTWF0aC5mbG9vcihNYXRoLnJhbmRvbSgpICogNDI5NDk2NzI5NilcbiAgfSwgY29uZmlnICk7XG5cbiAgdGhpcy5fb3B1c19lbmNvZGVyX2NyZWF0ZSA9IE1vZHVsZS5fb3B1c19lbmNvZGVyX2NyZWF0ZTtcbiAgdGhpcy5fb3B1c19lbmNvZGVyX2Rlc3Ryb3kgPSBNb2R1bGUuX29wdXNfZW5jb2Rlcl9kZXN0cm95O1xuICB0aGlzLl9vcHVzX2VuY29kZXJfY3RsID0gTW9kdWxlLl9vcHVzX2VuY29kZXJfY3RsO1xuICB0aGlzLl9zcGVleF9yZXNhbXBsZXJfcHJvY2Vzc19pbnRlcmxlYXZlZF9mbG9hdCA9IE1vZHVsZS5fc3BlZXhfcmVzYW1wbGVyX3Byb2Nlc3NfaW50ZXJsZWF2ZWRfZmxvYXQ7XG4gIHRoaXMuX3NwZWV4X3Jlc2FtcGxlcl9pbml0ID0gTW9kdWxlLl9zcGVleF9yZXNhbXBsZXJfaW5pdDtcbiAgdGhpcy5fc3BlZXhfcmVzYW1wbGVyX2Rlc3Ryb3kgPSBNb2R1bGUuX3NwZWV4X3Jlc2FtcGxlcl9kZXN0cm95O1xuICB0aGlzLl9vcHVzX2VuY29kZV9mbG9hdCA9IE1vZHVsZS5fb3B1c19lbmNvZGVfZmxvYXQ7XG4gIHRoaXMuX2ZyZWUgPSBNb2R1bGUuX2ZyZWU7XG4gIHRoaXMuX21hbGxvYyA9IE1vZHVsZS5fbWFsbG9jO1xuICB0aGlzLkhFQVBVOCA9IE1vZHVsZS5IRUFQVTg7XG4gIHRoaXMuSEVBUDMyID0gTW9kdWxlLkhFQVAzMjtcbiAgdGhpcy5IRUFQRjMyID0gTW9kdWxlLkhFQVBGMzI7XG5cbiAgdGhpcy5wYWdlSW5kZXggPSAwO1xuICB0aGlzLmdyYW51bGVQb3NpdGlvbiA9IDA7XG4gIHRoaXMuc2VnbWVudERhdGEgPSBuZXcgVWludDhBcnJheSggNjUwMjUgKTsgLy8gTWF4aW11bSBsZW5ndGggb2Ygb2dnT3B1cyBkYXRhXG4gIHRoaXMuc2VnbWVudERhdGFJbmRleCA9IDA7XG4gIHRoaXMuc2VnbWVudFRhYmxlID0gbmV3IFVpbnQ4QXJyYXkoIDI1NSApOyAvLyBNYXhpbXVtIGRhdGEgc2VnbWVudHNcbiAgdGhpcy5zZWdtZW50VGFibGVJbmRleCA9IDA7XG4gIHRoaXMuZnJhbWVzSW5QYWdlID0gMDtcblxuICB0aGlzLmluaXRDaGVja3N1bVRhYmxlKCk7XG4gIHRoaXMuaW5pdENvZGVjKCk7XG4gIHRoaXMuaW5pdFJlc2FtcGxlcigpO1xuXG4gIGlmICggdGhpcy5jb25maWcubnVtYmVyT2ZDaGFubmVscyA9PT0gMSApIHtcbiAgICB0aGlzLmludGVybGVhdmUgPSBmdW5jdGlvbiggYnVmZmVycyApIHsgcmV0dXJuIGJ1ZmZlcnNbMF07IH07XG4gIH1cbiAgZWxzZSB7XG4gICAgdGhpcy5pbnRlcmxlYXZlZEJ1ZmZlcnMgPSBuZXcgRmxvYXQzMkFycmF5KCB0aGlzLmNvbmZpZy5idWZmZXJMZW5ndGggKiB0aGlzLmNvbmZpZy5udW1iZXJPZkNoYW5uZWxzICk7XG4gIH1cblxufTtcblxuT2dnT3B1c0VuY29kZXIucHJvdG90eXBlLmVuY29kZSA9IGZ1bmN0aW9uKCBidWZmZXJzICkge1xuICB2YXIgc2FtcGxlcyA9IHRoaXMuaW50ZXJsZWF2ZSggYnVmZmVycyApO1xuICB2YXIgc2FtcGxlSW5kZXggPSAwO1xuXG4gIHdoaWxlICggc2FtcGxlSW5kZXggPCBzYW1wbGVzLmxlbmd0aCApIHtcblxuICAgIHZhciBsZW5ndGhUb0NvcHkgPSBNYXRoLm1pbiggdGhpcy5yZXNhbXBsZUJ1ZmZlckxlbmd0aCAtIHRoaXMucmVzYW1wbGVCdWZmZXJJbmRleCwgc2FtcGxlcy5sZW5ndGggLSBzYW1wbGVJbmRleCApO1xuICAgIHRoaXMucmVzYW1wbGVCdWZmZXIuc2V0KCBzYW1wbGVzLnN1YmFycmF5KCBzYW1wbGVJbmRleCwgc2FtcGxlSW5kZXgrbGVuZ3RoVG9Db3B5ICksIHRoaXMucmVzYW1wbGVCdWZmZXJJbmRleCApO1xuICAgIHNhbXBsZUluZGV4ICs9IGxlbmd0aFRvQ29weTtcbiAgICB0aGlzLnJlc2FtcGxlQnVmZmVySW5kZXggKz0gbGVuZ3RoVG9Db3B5O1xuXG4gICAgaWYgKCB0aGlzLnJlc2FtcGxlQnVmZmVySW5kZXggPT09IHRoaXMucmVzYW1wbGVCdWZmZXJMZW5ndGggKSB7XG4gICAgICB0aGlzLl9zcGVleF9yZXNhbXBsZXJfcHJvY2Vzc19pbnRlcmxlYXZlZF9mbG9hdCggdGhpcy5yZXNhbXBsZXIsIHRoaXMucmVzYW1wbGVCdWZmZXJQb2ludGVyLCB0aGlzLnJlc2FtcGxlU2FtcGxlc1BlckNoYW5uZWxQb2ludGVyLCB0aGlzLmVuY29kZXJCdWZmZXJQb2ludGVyLCB0aGlzLmVuY29kZXJTYW1wbGVzUGVyQ2hhbm5lbFBvaW50ZXIgKTtcbiAgICAgIHZhciBwYWNrZXRMZW5ndGggPSB0aGlzLl9vcHVzX2VuY29kZV9mbG9hdCggdGhpcy5lbmNvZGVyLCB0aGlzLmVuY29kZXJCdWZmZXJQb2ludGVyLCB0aGlzLmVuY29kZXJTYW1wbGVzUGVyQ2hhbm5lbCwgdGhpcy5lbmNvZGVyT3V0cHV0UG9pbnRlciwgdGhpcy5lbmNvZGVyT3V0cHV0TWF4TGVuZ3RoICk7XG4gICAgICB0aGlzLnNlZ21lbnRQYWNrZXQoIHBhY2tldExlbmd0aCApO1xuICAgICAgdGhpcy5yZXNhbXBsZUJ1ZmZlckluZGV4ID0gMDtcblxuICAgICAgdGhpcy5mcmFtZXNJblBhZ2UrKztcbiAgICAgIGlmICggdGhpcy5mcmFtZXNJblBhZ2UgPj0gdGhpcy5jb25maWcubWF4RnJhbWVzUGVyUGFnZSApIHtcbiAgICAgICAgdGhpcy5nZW5lcmF0ZVBhZ2UoKTtcbiAgICAgIH1cbiAgICB9XG4gIH1cbn07XG5cbk9nZ09wdXNFbmNvZGVyLnByb3RvdHlwZS5kZXN0cm95ID0gZnVuY3Rpb24oKSB7XG4gIGlmICggdGhpcy5lbmNvZGVyICkge1xuICAgIHRoaXMuX2ZyZWUodGhpcy5lbmNvZGVyU2FtcGxlc1BlckNoYW5uZWxQb2ludGVyKTtcbiAgICBkZWxldGUgdGhpcy5lbmNvZGVyU2FtcGxlc1BlckNoYW5uZWxQb2ludGVyO1xuICAgIHRoaXMuX2ZyZWUodGhpcy5lbmNvZGVyQnVmZmVyUG9pbnRlcik7XG4gICAgZGVsZXRlIHRoaXMuZW5jb2RlckJ1ZmZlclBvaW50ZXI7XG4gICAgdGhpcy5fZnJlZSh0aGlzLmVuY29kZXJPdXRwdXRQb2ludGVyKTtcbiAgICBkZWxldGUgdGhpcy5lbmNvZGVyT3V0cHV0UG9pbnRlcjtcbiAgICB0aGlzLl9mcmVlKHRoaXMucmVzYW1wbGVTYW1wbGVzUGVyQ2hhbm5lbFBvaW50ZXIpO1xuICAgIGRlbGV0ZSB0aGlzLnJlc2FtcGxlU2FtcGxlc1BlckNoYW5uZWxQb2ludGVyO1xuICAgIHRoaXMuX2ZyZWUodGhpcy5yZXNhbXBsZUJ1ZmZlclBvaW50ZXIpO1xuICAgIGRlbGV0ZSB0aGlzLnJlc2FtcGxlQnVmZmVyUG9pbnRlcjtcbiAgICB0aGlzLl9zcGVleF9yZXNhbXBsZXJfZGVzdHJveSh0aGlzLnJlc2FtcGxlcik7XG4gICAgZGVsZXRlIHRoaXMucmVzYW1wbGVyO1xuICAgIHRoaXMuX29wdXNfZW5jb2Rlcl9kZXN0cm95KHRoaXMuZW5jb2Rlcik7XG4gICAgZGVsZXRlIHRoaXMuZW5jb2RlcjtcbiAgfVxufTtcblxuT2dnT3B1c0VuY29kZXIucHJvdG90eXBlLmZsdXNoID0gZnVuY3Rpb24oKSB7XG4gIGlmICggdGhpcy5mcmFtZXNJblBhZ2UgKSB7XG4gICAgdGhpcy5nZW5lcmF0ZVBhZ2UoKTtcbiAgfVxuICAvLyBkaXNjYXJkIGFueSBwZW5kaW5nIGRhdGEgaW4gcmVzYW1wbGUgYnVmZmVyIChvbmx5IGEgZmV3IG1zIHdvcnRoKVxuICB0aGlzLnJlc2FtcGxlQnVmZmVySW5kZXggPSAwO1xuICBnbG9iYWxbJ3Bvc3RNZXNzYWdlJ10oIHttZXNzYWdlOiAnZmx1c2hlZCd9ICk7XG59O1xuXG5PZ2dPcHVzRW5jb2Rlci5wcm90b3R5cGUuZW5jb2RlRmluYWxGcmFtZSA9IGZ1bmN0aW9uKCkge1xuICBpZiAoIHRoaXMucmVzYW1wbGVCdWZmZXJJbmRleCA+IDAgKSB7XG4gICAgdmFyIGZpbmFsRnJhbWVCdWZmZXJzID0gW107XG4gICAgZm9yICggdmFyIGkgPSAwOyBpIDwgdGhpcy5jb25maWcubnVtYmVyT2ZDaGFubmVsczsgKytpICkge1xuICAgICAgZmluYWxGcmFtZUJ1ZmZlcnMucHVzaCggbmV3IEZsb2F0MzJBcnJheSggdGhpcy5jb25maWcuYnVmZmVyTGVuZ3RoIC0gKHRoaXMucmVzYW1wbGVCdWZmZXJJbmRleCAvIHRoaXMuY29uZmlnLm51bWJlck9mQ2hhbm5lbHMpICkpO1xuICAgIH1cbiAgICB0aGlzLmVuY29kZSggZmluYWxGcmFtZUJ1ZmZlcnMgKTtcbiAgfVxuICB0aGlzLmhlYWRlclR5cGUgKz0gNDtcbiAgdGhpcy5nZW5lcmF0ZVBhZ2UoKTtcbn07XG5cbk9nZ09wdXNFbmNvZGVyLnByb3RvdHlwZS5nZXRDaGVja3N1bSA9IGZ1bmN0aW9uKCBkYXRhICl7XG4gIHZhciBjaGVja3N1bSA9IDA7XG4gIGZvciAoIHZhciBpID0gMDsgaSA8IGRhdGEubGVuZ3RoOyBpKysgKSB7XG4gICAgY2hlY2tzdW0gPSAoY2hlY2tzdW0gPDwgOCkgXiB0aGlzLmNoZWNrc3VtVGFibGVbICgoY2hlY2tzdW0+Pj4yNCkgJiAweGZmKSBeIGRhdGFbaV0gXTtcbiAgfVxuICByZXR1cm4gY2hlY2tzdW0gPj4+IDA7XG59O1xuXG5PZ2dPcHVzRW5jb2Rlci5wcm90b3R5cGUuZ2VuZXJhdGVDb21tZW50UGFnZSA9IGZ1bmN0aW9uKCl7XG4gIHZhciBzZWdtZW50RGF0YVZpZXcgPSBuZXcgRGF0YVZpZXcoIHRoaXMuc2VnbWVudERhdGEuYnVmZmVyICk7XG4gIHNlZ21lbnREYXRhVmlldy5zZXRVaW50MzIoIDAsIDE5MzcwNzYzMDMsIHRydWUgKSAvLyBNYWdpYyBTaWduYXR1cmUgJ09wdXMnXG4gIHNlZ21lbnREYXRhVmlldy5zZXRVaW50MzIoIDQsIDE5MzYxNTQ5NjQsIHRydWUgKSAvLyBNYWdpYyBTaWduYXR1cmUgJ1RhZ3MnXG4gIHNlZ21lbnREYXRhVmlldy5zZXRVaW50MzIoIDgsIDEwLCB0cnVlICk7IC8vIFZlbmRvciBMZW5ndGhcbiAgc2VnbWVudERhdGFWaWV3LnNldFVpbnQzMiggMTIsIDE4Njg3ODQ5NzgsIHRydWUgKTsgLy8gVmVuZG9yIG5hbWUgJ1JlY28nXG4gIHNlZ21lbnREYXRhVmlldy5zZXRVaW50MzIoIDE2LCAxOTE5MjQ3NDc0LCB0cnVlICk7IC8vIFZlbmRvciBuYW1lICdyZGVyJ1xuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDE2KCAyMCwgMjEzMjIsIHRydWUgKTsgLy8gVmVuZG9yIG5hbWUgJ0pTJ1xuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDMyKCAyMiwgMCwgdHJ1ZSApOyAvLyBVc2VyIENvbW1lbnQgTGlzdCBMZW5ndGhcbiAgdGhpcy5zZWdtZW50VGFibGVJbmRleCA9IDE7XG4gIHRoaXMuc2VnbWVudERhdGFJbmRleCA9IHRoaXMuc2VnbWVudFRhYmxlWzBdID0gMjY7XG4gIHRoaXMuaGVhZGVyVHlwZSA9IDA7XG4gIHRoaXMuZ2VuZXJhdGVQYWdlKCk7XG59O1xuXG5PZ2dPcHVzRW5jb2Rlci5wcm90b3R5cGUuZ2VuZXJhdGVJZFBhZ2UgPSBmdW5jdGlvbigpe1xuICB2YXIgc2VnbWVudERhdGFWaWV3ID0gbmV3IERhdGFWaWV3KCB0aGlzLnNlZ21lbnREYXRhLmJ1ZmZlciApO1xuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDMyKCAwLCAxOTM3MDc2MzAzLCB0cnVlICkgLy8gTWFnaWMgU2lnbmF0dXJlICdPcHVzJ1xuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDMyKCA0LCAxNjg0MTA0NTIwLCB0cnVlICkgLy8gTWFnaWMgU2lnbmF0dXJlICdIZWFkJ1xuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDgoIDgsIDEsIHRydWUgKTsgLy8gVmVyc2lvblxuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDgoIDksIHRoaXMuY29uZmlnLm51bWJlck9mQ2hhbm5lbHMsIHRydWUgKTsgLy8gQ2hhbm5lbCBjb3VudFxuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDE2KCAxMCwgMzg0MCwgdHJ1ZSApOyAvLyBwcmUtc2tpcCAoODBtcylcbiAgc2VnbWVudERhdGFWaWV3LnNldFVpbnQzMiggMTIsIHRoaXMuY29uZmlnLm9yaWdpbmFsU2FtcGxlUmF0ZU92ZXJyaWRlIHx8IHRoaXMuY29uZmlnLm9yaWdpbmFsU2FtcGxlUmF0ZSwgdHJ1ZSApOyAvLyBvcmlnaW5hbCBzYW1wbGUgcmF0ZVxuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDE2KCAxNiwgMCwgdHJ1ZSApOyAvLyBvdXRwdXQgZ2FpblxuICBzZWdtZW50RGF0YVZpZXcuc2V0VWludDgoIDE4LCAwLCB0cnVlICk7IC8vIGNoYW5uZWwgbWFwIDAgPSBtb25vIG9yIHN0ZXJlb1xuICB0aGlzLnNlZ21lbnRUYWJsZUluZGV4ID0gMTtcbiAgdGhpcy5zZWdtZW50RGF0YUluZGV4ID0gdGhpcy5zZWdtZW50VGFibGVbMF0gPSAxOTtcbiAgdGhpcy5oZWFkZXJUeXBlID0gMjtcbiAgdGhpcy5nZW5lcmF0ZVBhZ2UoKTtcbn07XG5cbk9nZ09wdXNFbmNvZGVyLnByb3RvdHlwZS5nZW5lcmF0ZVBhZ2UgPSBmdW5jdGlvbigpe1xuICB2YXIgZ3JhbnVsZVBvc2l0aW9uID0gKCB0aGlzLmxhc3RQb3NpdGl2ZUdyYW51bGVQb3NpdGlvbiA9PT0gdGhpcy5ncmFudWxlUG9zaXRpb24pID8gLTEgOiB0aGlzLmdyYW51bGVQb3NpdGlvbjtcbiAgdmFyIHBhZ2VCdWZmZXIgPSBuZXcgQXJyYXlCdWZmZXIoICAyNyArIHRoaXMuc2VnbWVudFRhYmxlSW5kZXggKyB0aGlzLnNlZ21lbnREYXRhSW5kZXggKTtcbiAgdmFyIHBhZ2VCdWZmZXJWaWV3ID0gbmV3IERhdGFWaWV3KCBwYWdlQnVmZmVyICk7XG4gIHZhciBwYWdlID0gbmV3IFVpbnQ4QXJyYXkoIHBhZ2VCdWZmZXIgKTtcblxuICBwYWdlQnVmZmVyVmlldy5zZXRVaW50MzIoIDAsIDEzOTkyODU1ODMsIHRydWUpOyAvLyBDYXB0dXJlIFBhdHRlcm4gc3RhcnRzIGFsbCBwYWdlIGhlYWRlcnMgJ09nZ1MnXG4gIHBhZ2VCdWZmZXJWaWV3LnNldFVpbnQ4KCA0LCAwLCB0cnVlICk7IC8vIFZlcnNpb25cbiAgcGFnZUJ1ZmZlclZpZXcuc2V0VWludDgoIDUsIHRoaXMuaGVhZGVyVHlwZSwgdHJ1ZSApOyAvLyAxID0gY29udGludWF0aW9uLCAyID0gYmVnaW5uaW5nIG9mIHN0cmVhbSwgNCA9IGVuZCBvZiBzdHJlYW1cblxuICAvLyBOdW1iZXIgb2Ygc2FtcGxlcyB1cHRvIGFuZCBpbmNsdWRpbmcgdGhpcyBwYWdlIGF0IDQ4MDAwSHosIGludG8gc2lnbmVkIDY0IGJpdCBMaXR0bGUgRW5kaWFuIGludGVnZXJcbiAgLy8gSmF2YXNjcmlwdCBOdW1iZXIgbWF4aW11bSB2YWx1ZSBpcyA1MyBiaXRzIG9yIDJeNTMgLSAxIFxuICBwYWdlQnVmZmVyVmlldy5zZXRVaW50MzIoIDYsIGdyYW51bGVQb3NpdGlvbiwgdHJ1ZSApO1xuICBpZiAoZ3JhbnVsZVBvc2l0aW9uIDwgMCkge1xuICAgIHBhZ2VCdWZmZXJWaWV3LnNldEludDMyKCAxMCwgTWF0aC5jZWlsKGdyYW51bGVQb3NpdGlvbi80Mjk0OTY3Mjk3KSAtIDEsIHRydWUgKTtcbiAgfVxuICBlbHNlIHtcbiAgICBwYWdlQnVmZmVyVmlldy5zZXRJbnQzMiggMTAsIE1hdGguZmxvb3IoZ3JhbnVsZVBvc2l0aW9uLzQyOTQ5NjcyOTYpLCB0cnVlICk7XG4gIH1cblxuICBwYWdlQnVmZmVyVmlldy5zZXRVaW50MzIoIDE0LCB0aGlzLmNvbmZpZy5zZXJpYWwsIHRydWUgKTsgLy8gQml0c3RyZWFtIHNlcmlhbCBudW1iZXJcbiAgcGFnZUJ1ZmZlclZpZXcuc2V0VWludDMyKCAxOCwgdGhpcy5wYWdlSW5kZXgrKywgdHJ1ZSApOyAvLyBQYWdlIHNlcXVlbmNlIG51bWJlclxuICBwYWdlQnVmZmVyVmlldy5zZXRVaW50OCggMjYsIHRoaXMuc2VnbWVudFRhYmxlSW5kZXgsIHRydWUgKTsgLy8gTnVtYmVyIG9mIHNlZ21lbnRzIGluIHBhZ2UuXG4gIHBhZ2Uuc2V0KCB0aGlzLnNlZ21lbnRUYWJsZS5zdWJhcnJheSgwLCB0aGlzLnNlZ21lbnRUYWJsZUluZGV4KSwgMjcgKTsgLy8gU2VnbWVudCBUYWJsZVxuICBwYWdlLnNldCggdGhpcy5zZWdtZW50RGF0YS5zdWJhcnJheSgwLCB0aGlzLnNlZ21lbnREYXRhSW5kZXgpLCAyNyArIHRoaXMuc2VnbWVudFRhYmxlSW5kZXggKTsgLy8gU2VnbWVudCBEYXRhXG4gIHBhZ2VCdWZmZXJWaWV3LnNldFVpbnQzMiggMjIsIHRoaXMuZ2V0Q2hlY2tzdW0oIHBhZ2UgKSwgdHJ1ZSApOyAvLyBDaGVja3N1bVxuXG4gIGdsb2JhbFsncG9zdE1lc3NhZ2UnXSgge21lc3NhZ2U6ICdwYWdlJywgcGFnZTogcGFnZSwgc2FtcGxlUG9zaXRpb246IHRoaXMuZ3JhbnVsZVBvc2l0aW9ufSwgW3BhZ2UuYnVmZmVyXSApO1xuICB0aGlzLnNlZ21lbnRUYWJsZUluZGV4ID0gMDtcbiAgdGhpcy5zZWdtZW50RGF0YUluZGV4ID0gMDtcbiAgdGhpcy5mcmFtZXNJblBhZ2UgPSAwO1xuICBpZiAoIGdyYW51bGVQb3NpdGlvbiA+IDAgKSB7XG4gICAgdGhpcy5sYXN0UG9zaXRpdmVHcmFudWxlUG9zaXRpb24gPSBncmFudWxlUG9zaXRpb247XG4gIH1cbn07XG5cbk9nZ09wdXNFbmNvZGVyLnByb3RvdHlwZS5pbml0Q2hlY2tzdW1UYWJsZSA9IGZ1bmN0aW9uKCl7XG4gIHRoaXMuY2hlY2tzdW1UYWJsZSA9IFtdO1xuICBmb3IgKCB2YXIgaSA9IDA7IGkgPCAyNTY7IGkrKyApIHtcbiAgICB2YXIgciA9IGkgPDwgMjQ7XG4gICAgZm9yICggdmFyIGogPSAwOyBqIDwgODsgaisrICkge1xuICAgICAgciA9ICgociAmIDB4ODAwMDAwMDApICE9IDApID8gKChyIDw8IDEpIF4gMHgwNGMxMWRiNykgOiAociA8PCAxKTtcbiAgICB9XG4gICAgdGhpcy5jaGVja3N1bVRhYmxlW2ldID0gKHIgJiAweGZmZmZmZmZmKTtcbiAgfVxufTtcblxuT2dnT3B1c0VuY29kZXIucHJvdG90eXBlLnNldE9wdXNDb250cm9sID0gZnVuY3Rpb24oIGNvbnRyb2wsIHZhbHVlICl7XG4gIHZhciBsb2NhdGlvbiA9IHRoaXMuX21hbGxvYyggNCApO1xuICB0aGlzLkhFQVAzMlsgbG9jYXRpb24gPj4gMiBdID0gdmFsdWU7XG4gIHRoaXMuX29wdXNfZW5jb2Rlcl9jdGwoIHRoaXMuZW5jb2RlciwgY29udHJvbCwgbG9jYXRpb24gKTtcbiAgdGhpcy5fZnJlZSggbG9jYXRpb24gKTtcbn07XG5cbk9nZ09wdXNFbmNvZGVyLnByb3RvdHlwZS5pbml0Q29kZWMgPSBmdW5jdGlvbigpIHtcbiAgdmFyIGVyckxvY2F0aW9uID0gdGhpcy5fbWFsbG9jKCA0ICk7XG4gIHRoaXMuZW5jb2RlciA9IHRoaXMuX29wdXNfZW5jb2Rlcl9jcmVhdGUoIHRoaXMuY29uZmlnLmVuY29kZXJTYW1wbGVSYXRlLCB0aGlzLmNvbmZpZy5udW1iZXJPZkNoYW5uZWxzLCB0aGlzLmNvbmZpZy5lbmNvZGVyQXBwbGljYXRpb24sIGVyckxvY2F0aW9uICk7XG4gIHRoaXMuX2ZyZWUoIGVyckxvY2F0aW9uICk7XG5cbiAgaWYgKCB0aGlzLmNvbmZpZy5lbmNvZGVyQml0UmF0ZSApIHtcbiAgICB0aGlzLnNldE9wdXNDb250cm9sKCA0MDAyLCB0aGlzLmNvbmZpZy5lbmNvZGVyQml0UmF0ZSApO1xuICB9XG5cbiAgaWYgKCB0aGlzLmNvbmZpZy5lbmNvZGVyQ29tcGxleGl0eSApIHtcbiAgICB0aGlzLnNldE9wdXNDb250cm9sKCA0MDEwLCB0aGlzLmNvbmZpZy5lbmNvZGVyQ29tcGxleGl0eSApO1xuICB9XG5cbiAgdGhpcy5lbmNvZGVyU2FtcGxlc1BlckNoYW5uZWwgPSB0aGlzLmNvbmZpZy5lbmNvZGVyU2FtcGxlUmF0ZSAqIHRoaXMuY29uZmlnLmVuY29kZXJGcmFtZVNpemUgLyAxMDAwO1xuICB0aGlzLmVuY29kZXJTYW1wbGVzUGVyQ2hhbm5lbFBvaW50ZXIgPSB0aGlzLl9tYWxsb2MoIDQgKTtcbiAgdGhpcy5IRUFQMzJbIHRoaXMuZW5jb2RlclNhbXBsZXNQZXJDaGFubmVsUG9pbnRlciA+PiAyIF0gPSB0aGlzLmVuY29kZXJTYW1wbGVzUGVyQ2hhbm5lbDtcblxuICB0aGlzLmVuY29kZXJCdWZmZXJMZW5ndGggPSB0aGlzLmVuY29kZXJTYW1wbGVzUGVyQ2hhbm5lbCAqIHRoaXMuY29uZmlnLm51bWJlck9mQ2hhbm5lbHM7XG4gIHRoaXMuZW5jb2RlckJ1ZmZlclBvaW50ZXIgPSB0aGlzLl9tYWxsb2MoIHRoaXMuZW5jb2RlckJ1ZmZlckxlbmd0aCAqIDQgKTsgLy8gNCBieXRlcyBwZXIgc2FtcGxlXG4gIHRoaXMuZW5jb2RlckJ1ZmZlciA9IHRoaXMuSEVBUEYzMi5zdWJhcnJheSggdGhpcy5lbmNvZGVyQnVmZmVyUG9pbnRlciA+PiAyLCAodGhpcy5lbmNvZGVyQnVmZmVyUG9pbnRlciA+PiAyKSArIHRoaXMuZW5jb2RlckJ1ZmZlckxlbmd0aCApO1xuXG4gIHRoaXMuZW5jb2Rlck91dHB1dE1heExlbmd0aCA9IDQwMDA7XG4gIHRoaXMuZW5jb2Rlck91dHB1dFBvaW50ZXIgPSB0aGlzLl9tYWxsb2MoIHRoaXMuZW5jb2Rlck91dHB1dE1heExlbmd0aCApO1xuICB0aGlzLmVuY29kZXJPdXRwdXRCdWZmZXIgPSB0aGlzLkhFQVBVOC5zdWJhcnJheSggdGhpcy5lbmNvZGVyT3V0cHV0UG9pbnRlciwgdGhpcy5lbmNvZGVyT3V0cHV0UG9pbnRlciArIHRoaXMuZW5jb2Rlck91dHB1dE1heExlbmd0aCApO1xufTtcblxuT2dnT3B1c0VuY29kZXIucHJvdG90eXBlLmluaXRSZXNhbXBsZXIgPSBmdW5jdGlvbigpIHtcbiAgdmFyIGVyckxvY2F0aW9uID0gdGhpcy5fbWFsbG9jKCA0ICk7XG4gIHRoaXMucmVzYW1wbGVyID0gdGhpcy5fc3BlZXhfcmVzYW1wbGVyX2luaXQoIHRoaXMuY29uZmlnLm51bWJlck9mQ2hhbm5lbHMsIHRoaXMuY29uZmlnLm9yaWdpbmFsU2FtcGxlUmF0ZSwgdGhpcy5jb25maWcuZW5jb2RlclNhbXBsZVJhdGUsIHRoaXMuY29uZmlnLnJlc2FtcGxlUXVhbGl0eSwgZXJyTG9jYXRpb24gKTtcbiAgdGhpcy5fZnJlZSggZXJyTG9jYXRpb24gKTtcblxuICB0aGlzLnJlc2FtcGxlQnVmZmVySW5kZXggPSAwO1xuICB0aGlzLnJlc2FtcGxlU2FtcGxlc1BlckNoYW5uZWwgPSB0aGlzLmNvbmZpZy5vcmlnaW5hbFNhbXBsZVJhdGUgKiB0aGlzLmNvbmZpZy5lbmNvZGVyRnJhbWVTaXplIC8gMTAwMDtcbiAgdGhpcy5yZXNhbXBsZVNhbXBsZXNQZXJDaGFubmVsUG9pbnRlciA9IHRoaXMuX21hbGxvYyggNCApO1xuICB0aGlzLkhFQVAzMlsgdGhpcy5yZXNhbXBsZVNhbXBsZXNQZXJDaGFubmVsUG9pbnRlciA+PiAyIF0gPSB0aGlzLnJlc2FtcGxlU2FtcGxlc1BlckNoYW5uZWw7XG5cbiAgdGhpcy5yZXNhbXBsZUJ1ZmZlckxlbmd0aCA9IHRoaXMucmVzYW1wbGVTYW1wbGVzUGVyQ2hhbm5lbCAqIHRoaXMuY29uZmlnLm51bWJlck9mQ2hhbm5lbHM7XG4gIHRoaXMucmVzYW1wbGVCdWZmZXJQb2ludGVyID0gdGhpcy5fbWFsbG9jKCB0aGlzLnJlc2FtcGxlQnVmZmVyTGVuZ3RoICogNCApOyAvLyA0IGJ5dGVzIHBlciBzYW1wbGVcbiAgdGhpcy5yZXNhbXBsZUJ1ZmZlciA9IHRoaXMuSEVBUEYzMi5zdWJhcnJheSggdGhpcy5yZXNhbXBsZUJ1ZmZlclBvaW50ZXIgPj4gMiwgKHRoaXMucmVzYW1wbGVCdWZmZXJQb2ludGVyID4+IDIpICsgdGhpcy5yZXNhbXBsZUJ1ZmZlckxlbmd0aCApO1xufTtcblxuT2dnT3B1c0VuY29kZXIucHJvdG90eXBlLmludGVybGVhdmUgPSBmdW5jdGlvbiggYnVmZmVycyApIHtcbiAgZm9yICggdmFyIGkgPSAwOyBpIDwgdGhpcy5jb25maWcuYnVmZmVyTGVuZ3RoOyBpKysgKSB7XG4gICAgZm9yICggdmFyIGNoYW5uZWwgPSAwOyBjaGFubmVsIDwgdGhpcy5jb25maWcubnVtYmVyT2ZDaGFubmVsczsgY2hhbm5lbCsrICkge1xuICAgICAgdGhpcy5pbnRlcmxlYXZlZEJ1ZmZlcnNbIGkgKiB0aGlzLmNvbmZpZy5udW1iZXJPZkNoYW5uZWxzICsgY2hhbm5lbCBdID0gYnVmZmVyc1sgY2hhbm5lbCBdWyBpIF07XG4gICAgfVxuICB9XG5cbiAgcmV0dXJuIHRoaXMuaW50ZXJsZWF2ZWRCdWZmZXJzO1xufTtcblxuT2dnT3B1c0VuY29kZXIucHJvdG90eXBlLnNlZ21lbnRQYWNrZXQgPSBmdW5jdGlvbiggcGFja2V0TGVuZ3RoICkge1xuICB2YXIgcGFja2V0SW5kZXggPSAwO1xuXG4gIHdoaWxlICggcGFja2V0TGVuZ3RoID49IDAgKSB7XG5cbiAgICBpZiAoIHRoaXMuc2VnbWVudFRhYmxlSW5kZXggPT09IDI1NSApIHtcbiAgICAgIHRoaXMuZ2VuZXJhdGVQYWdlKCk7XG4gICAgICB0aGlzLmhlYWRlclR5cGUgPSAxO1xuICAgIH1cblxuICAgIHZhciBzZWdtZW50TGVuZ3RoID0gTWF0aC5taW4oIHBhY2tldExlbmd0aCwgMjU1ICk7XG4gICAgdGhpcy5zZWdtZW50VGFibGVbIHRoaXMuc2VnbWVudFRhYmxlSW5kZXgrKyBdID0gc2VnbWVudExlbmd0aDtcbiAgICB2YXIgc2VnbWVudCA9IHRoaXMuZW5jb2Rlck91dHB1dEJ1ZmZlci5zdWJhcnJheSggcGFja2V0SW5kZXgsIHBhY2tldEluZGV4ICsgc2VnbWVudExlbmd0aCApO1xuICAgIHRoaXMuc2VnbWVudERhdGEuc2V0KHNlZ21lbnQgLCB0aGlzLnNlZ21lbnREYXRhSW5kZXggKTtcbiAgICBnbG9iYWxbJ3Bvc3RNZXNzYWdlJ10oe3R5cGU6ICdvcHVzJywgZGF0YTogc2VnbWVudH0pO1xuICAgIHRoaXMuc2VnbWVudERhdGFJbmRleCArPSBzZWdtZW50TGVuZ3RoO1xuICAgIHBhY2tldEluZGV4ICs9IHNlZ21lbnRMZW5ndGg7XG4gICAgcGFja2V0TGVuZ3RoIC09IDI1NTtcbiAgfVxuXG4gIHRoaXMuZ3JhbnVsZVBvc2l0aW9uICs9ICggNDggKiB0aGlzLmNvbmZpZy5lbmNvZGVyRnJhbWVTaXplICk7XG4gIGlmICggdGhpcy5zZWdtZW50VGFibGVJbmRleCA9PT0gMjU1ICkge1xuICAgIHRoaXMuZ2VuZXJhdGVQYWdlKCk7XG4gICAgdGhpcy5oZWFkZXJUeXBlID0gMDtcbiAgfVxufTtcblxuXG5pZiAoIU1vZHVsZSkge1xuICBNb2R1bGUgPSB7fTtcbn1cblxuTW9kdWxlWydtYWluUmVhZHknXSA9IG1haW5SZWFkeTtcbk1vZHVsZVsnT2dnT3B1c0VuY29kZXInXSA9IE9nZ09wdXNFbmNvZGVyO1xuTW9kdWxlWydvblJ1bnRpbWVJbml0aWFsaXplZCddID0gbWFpblJlYWR5UmVzb2x2ZTtcblxubW9kdWxlLmV4cG9ydHMgPSBNb2R1bGU7XG4iXSwibWFwcGluZ3MiOiJBQUFBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7QUFDQTtBQUNBO0FBQ0E7O0EiLCJzb3VyY2VSb290IjoiIn0=\n//# sourceURL=webpack-internal:///./src/encoderWorker.js\n");
 
 /***/ })
-/******/ ]);
+
+/******/ });
 });
 
 
@@ -444,53 +158,65 @@ for (key in Module) {
   }
 }
 
-Module['arguments'] = [];
-Module['thisProgram'] = './this.program';
-Module['quit'] = function(status, toThrow) {
+var arguments_ = [];
+var thisProgram = './this.program';
+var quit_ = function(status, toThrow) {
   throw toThrow;
 };
-Module['preRun'] = [];
-Module['postRun'] = [];
 
-// The environment setup code below is customized to use Module.
-// *** Environment setup code ***
+// Determine the runtime environment we are in. You can customize this by
+// setting the ENVIRONMENT setting at compile time (see settings.js).
+
 var ENVIRONMENT_IS_WEB = false;
 var ENVIRONMENT_IS_WORKER = false;
 var ENVIRONMENT_IS_NODE = false;
+var ENVIRONMENT_HAS_NODE = false;
 var ENVIRONMENT_IS_SHELL = false;
+ENVIRONMENT_IS_WEB = typeof window === 'object';
+ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
+// A web environment like Electron.js can have Node enabled, so we must
+// distinguish between Node-enabled environments and Node environments per se.
+// This will allow the former to do things like mount NODEFS.
+// Extended check using process.versions fixes issue #8816.
+// (Also makes redundant the original check that 'require' is a function.)
+ENVIRONMENT_HAS_NODE = typeof process === 'object' && typeof process.versions === 'object' && typeof process.versions.node === 'string';
+ENVIRONMENT_IS_NODE = ENVIRONMENT_HAS_NODE && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
+ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
+
+
 
 // Three configurations we can be running in:
 // 1) We could be the application main() thread running in the main JS UI thread. (ENVIRONMENT_IS_WORKER == false and ENVIRONMENT_IS_PTHREAD == false)
 // 2) We could be the application main() thread proxied to worker. (with Emscripten -s PROXY_TO_WORKER=1) (ENVIRONMENT_IS_WORKER == true, ENVIRONMENT_IS_PTHREAD == false)
 // 3) We could be an application pthread running in a worker. (ENVIRONMENT_IS_WORKER == true and ENVIRONMENT_IS_PTHREAD == true)
 
-if (Module['ENVIRONMENT']) {
-  if (Module['ENVIRONMENT'] === 'WEB') {
-    ENVIRONMENT_IS_WEB = true;
-  } else if (Module['ENVIRONMENT'] === 'WORKER') {
-    ENVIRONMENT_IS_WORKER = true;
-  } else if (Module['ENVIRONMENT'] === 'NODE') {
-    ENVIRONMENT_IS_NODE = true;
-  } else if (Module['ENVIRONMENT'] === 'SHELL') {
-    ENVIRONMENT_IS_SHELL = true;
-  } else {
-    throw new Error('Module[\'ENVIRONMENT\'] value is not valid. must be one of: WEB|WORKER|NODE|SHELL.');
+
+
+
+// `/` should be present at the end if `scriptDirectory` is not empty
+var scriptDirectory = '';
+function locateFile(path) {
+  if (Module['locateFile']) {
+    return Module['locateFile'](path, scriptDirectory);
   }
-} else {
-  ENVIRONMENT_IS_WEB = typeof window === 'object';
-  ENVIRONMENT_IS_WORKER = typeof importScripts === 'function';
-  ENVIRONMENT_IS_NODE = typeof process === 'object' && typeof require === 'function' && !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_WORKER;
-  ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
+  return scriptDirectory + path;
 }
 
+// Hooks that are implemented differently in different runtime environments.
+var read_,
+    readAsync,
+    readBinary,
+    setWindowTitle;
 
 if (ENVIRONMENT_IS_NODE) {
+  scriptDirectory = __dirname + '/';
+
   // Expose functionality in the same simple way that the shells work
   // Note that we pollute the global namespace here, otherwise we break in node
   var nodeFS;
   var nodePath;
 
-  Module['read'] = function shell_read(filename, binary) {
+  read_ = function shell_read(filename, binary) {
     var ret;
       if (!nodeFS) nodeFS = require('fs');
       if (!nodePath) nodePath = require('path');
@@ -499,8 +225,8 @@ if (ENVIRONMENT_IS_NODE) {
     return binary ? ret : ret.toString();
   };
 
-  Module['readBinary'] = function readBinary(filename) {
-    var ret = Module['read'](filename, true);
+  readBinary = function readBinary(filename) {
+    var ret = read_(filename, true);
     if (!ret.buffer) {
       ret = new Uint8Array(ret);
     }
@@ -509,10 +235,10 @@ if (ENVIRONMENT_IS_NODE) {
   };
 
   if (process['argv'].length > 1) {
-    Module['thisProgram'] = process['argv'][1].replace(/\\/g, '/');
+    thisProgram = process['argv'][1].replace(/\\/g, '/');
   }
 
-  Module['arguments'] = process['argv'].slice(2);
+  arguments_ = process['argv'].slice(2);
 
   if (typeof module !== 'undefined') {
     module['exports'] = Module;
@@ -524,22 +250,25 @@ if (ENVIRONMENT_IS_NODE) {
       throw ex;
     }
   });
-  // Currently node will swallow unhandled rejections, but this behavior is
-  // deprecated, and in the future it will exit with error status.
-  process['on']('unhandledRejection', function(reason, p) {
-    process['exit'](1);
-  });
+
+  process['on']('unhandledRejection', abort);
+
+  quit_ = function(status) {
+    process['exit'](status);
+  };
 
   Module['inspect'] = function () { return '[Emscripten Module object]'; };
-}
-else if (ENVIRONMENT_IS_SHELL) {
+} else
+if (ENVIRONMENT_IS_SHELL) {
+
+
   if (typeof read != 'undefined') {
-    Module['read'] = function shell_read(f) {
+    read_ = function shell_read(f) {
       return read(f);
     };
   }
 
-  Module['readBinary'] = function readBinary(f) {
+  readBinary = function readBinary(f) {
     var data;
     if (typeof readbuffer === 'function') {
       return new Uint8Array(readbuffer(f));
@@ -550,19 +279,42 @@ else if (ENVIRONMENT_IS_SHELL) {
   };
 
   if (typeof scriptArgs != 'undefined') {
-    Module['arguments'] = scriptArgs;
+    arguments_ = scriptArgs;
   } else if (typeof arguments != 'undefined') {
-    Module['arguments'] = arguments;
+    arguments_ = arguments;
   }
 
   if (typeof quit === 'function') {
-    Module['quit'] = function(status, toThrow) {
+    quit_ = function(status) {
       quit(status);
-    }
+    };
   }
-}
-else if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
-  Module['read'] = function shell_read(url) {
+
+  if (typeof print !== 'undefined') {
+    // Prefer to use print/printErr where they exist, as they usually work better.
+    if (typeof console === 'undefined') console = {};
+    console.log = print;
+    console.warn = console.error = typeof printErr !== 'undefined' ? printErr : print;
+  }
+} else
+if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
+  if (ENVIRONMENT_IS_WORKER) { // Check worker, not web, since window could be polyfilled
+    scriptDirectory = self.location.href;
+  } else if (document.currentScript) { // web
+    scriptDirectory = document.currentScript.src;
+  }
+  // blob urls look like blob:http://site.com/etc/etc and we cannot infer anything from them.
+  // otherwise, slice off the final part of the url to find the script directory.
+  // if scriptDirectory does not contain a slash, lastIndexOf will return -1,
+  // and scriptDirectory will correctly be replaced with an empty string.
+  if (scriptDirectory.indexOf('blob:') !== 0) {
+    scriptDirectory = scriptDirectory.substr(0, scriptDirectory.lastIndexOf('/')+1);
+  } else {
+    scriptDirectory = '';
+  }
+
+
+  read_ = function shell_read(url) {
       var xhr = new XMLHttpRequest();
       xhr.open('GET', url, false);
       xhr.send(null);
@@ -570,7 +322,7 @@ else if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
   };
 
   if (ENVIRONMENT_IS_WORKER) {
-    Module['readBinary'] = function readBinary(url) {
+    readBinary = function readBinary(url) {
         var xhr = new XMLHttpRequest();
         xhr.open('GET', url, false);
         xhr.responseType = 'arraybuffer';
@@ -579,7 +331,7 @@ else if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
     };
   }
 
-  Module['readAsync'] = function readAsync(url, onload, onerror) {
+  readAsync = function readAsync(url, onload, onerror) {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', url, true);
     xhr.responseType = 'arraybuffer';
@@ -594,20 +346,15 @@ else if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
     xhr.send(null);
   };
 
-  Module['setWindowTitle'] = function(title) { document.title = title };
+  setWindowTitle = function(title) { document.title = title };
+} else
+{
 }
 
-// console.log is checked first, as 'print' on the web will open a print dialogue
-// printErr is preferable to console.warn (works better in shells)
-// bind(console) is necessary to fix IE/Edge closed dev tools panel behavior.
-Module['print'] = typeof console !== 'undefined' ? console.log.bind(console) : (typeof print !== 'undefined' ? print : null);
-Module['printErr'] = typeof printErr !== 'undefined' ? printErr : ((typeof console !== 'undefined' && console.warn.bind(console)) || Module['print']);
-
-// *** Environment setup code ***
-
-// Closure helpers
-Module.print = Module['print'];
-Module.printErr = Module['printErr'];
+// Set up the out() and err() hooks, which are how we can print to stdout or
+// stderr, respectively.
+var out = Module['print'] || console.log.bind(console);
+var err = Module['printErr'] || console.warn.bind(console);
 
 // Merge back in the overrides
 for (key in moduleOverrides) {
@@ -617,41 +364,45 @@ for (key in moduleOverrides) {
 }
 // Free the object hierarchy contained in the overrides, this lets the GC
 // reclaim data used e.g. in memoryInitializerRequest, which is a large typed array.
-moduleOverrides = undefined;
+moduleOverrides = null;
+
+// Emit code to handle expected values on the Module object. This applies Module.x
+// to the proper local x. This has two benefits: first, we only emit it if it is
+// expected to arrive, and second, by using a local everywhere else that can be
+// minified.
+if (Module['arguments']) arguments_ = Module['arguments'];
+if (Module['thisProgram']) thisProgram = Module['thisProgram'];
+if (Module['quit']) quit_ = Module['quit'];
+
+// perform assertions in shell.js after we set up out() and err(), as otherwise if an assertion fails it cannot print the message
+
+// TODO remove when SDL2 is fixed (also see above)
 
 
+
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
 
 // {{PREAMBLE_ADDITIONS}}
 
 var STACK_ALIGN = 16;
 
 
-function staticAlloc(size) {
-  assert(!staticSealed);
-  var ret = STATICTOP;
-  STATICTOP = (STATICTOP + size + 15) & -16;
-  return ret;
-}
-
 function dynamicAlloc(size) {
-  assert(DYNAMICTOP_PTR);
   var ret = HEAP32[DYNAMICTOP_PTR>>2];
   var end = (ret + size + 15) & -16;
-  HEAP32[DYNAMICTOP_PTR>>2] = end;
-  if (end >= TOTAL_MEMORY) {
-    var success = enlargeMemory();
-    if (!success) {
-      HEAP32[DYNAMICTOP_PTR>>2] = ret;
-      return 0;
-    }
+  if (end > _emscripten_get_heap_size()) {
+    abort();
   }
+  HEAP32[DYNAMICTOP_PTR>>2] = end;
   return ret;
 }
 
 function alignMemory(size, factor) {
   if (!factor) factor = STACK_ALIGN; // stack alignment (16-byte) by default
-  var ret = size = Math.ceil(size / factor) * factor;
-  return ret;
+  return Math.ceil(size / factor) * factor;
 }
 
 function getNativeTypeSize(type) {
@@ -667,7 +418,7 @@ function getNativeTypeSize(type) {
         return 4; // A pointer
       } else if (type[0] === 'i') {
         var bits = parseInt(type.substr(1));
-        assert(bits % 8 === 0);
+        assert(bits % 8 === 0, 'getNativeTypeSize invalid bits ' + bits + ', type ' + type);
         return bits / 8;
       } else {
         return 0;
@@ -680,17 +431,129 @@ function warnOnce(text) {
   if (!warnOnce.shown) warnOnce.shown = {};
   if (!warnOnce.shown[text]) {
     warnOnce.shown[text] = 1;
-    Module.printErr(text);
+    err(text);
   }
 }
+
+var asm2wasmImports = { // special asm2wasm imports
+    "f64-rem": function(x, y) {
+        return x % y;
+    },
+    "debugger": function() {
+    }
+};
 
 
 
 var jsCallStartIndex = 1;
 var functionPointers = new Array(0);
 
-// 'sig' parameter is only used on LLVM wasm backend
+// Wraps a JS function as a wasm function with a given signature.
+// In the future, we may get a WebAssembly.Function constructor. Until then,
+// we create a wasm module that takes the JS function as an import with a given
+// signature, and re-exports that as a wasm function.
+function convertJsFunctionToWasm(func, sig) {
+
+  // The module is static, with the exception of the type section, which is
+  // generated based on the signature passed in.
+  var typeSection = [
+    0x01, // id: section,
+    0x00, // length: 0 (placeholder)
+    0x01, // count: 1
+    0x60, // form: func
+  ];
+  var sigRet = sig.slice(0, 1);
+  var sigParam = sig.slice(1);
+  var typeCodes = {
+    'i': 0x7f, // i32
+    'j': 0x7e, // i64
+    'f': 0x7d, // f32
+    'd': 0x7c, // f64
+  };
+
+  // Parameters, length + signatures
+  typeSection.push(sigParam.length);
+  for (var i = 0; i < sigParam.length; ++i) {
+    typeSection.push(typeCodes[sigParam[i]]);
+  }
+
+  // Return values, length + signatures
+  // With no multi-return in MVP, either 0 (void) or 1 (anything else)
+  if (sigRet == 'v') {
+    typeSection.push(0x00);
+  } else {
+    typeSection = typeSection.concat([0x01, typeCodes[sigRet]]);
+  }
+
+  // Write the overall length of the type section back into the section header
+  // (excepting the 2 bytes for the section id and length)
+  typeSection[1] = typeSection.length - 2;
+
+  // Rest of the module is static
+  var bytes = new Uint8Array([
+    0x00, 0x61, 0x73, 0x6d, // magic ("\0asm")
+    0x01, 0x00, 0x00, 0x00, // version: 1
+  ].concat(typeSection, [
+    0x02, 0x07, // import section
+      // (import "e" "f" (func 0 (type 0)))
+      0x01, 0x01, 0x65, 0x01, 0x66, 0x00, 0x00,
+    0x07, 0x05, // export section
+      // (export "f" (func 0 (type 0)))
+      0x01, 0x01, 0x66, 0x00, 0x00,
+  ]));
+
+   // We can compile this wasm module synchronously because it is very small.
+  // This accepts an import (at "e.f"), that it reroutes to an export (at "f")
+  var module = new WebAssembly.Module(bytes);
+  var instance = new WebAssembly.Instance(module, {
+    e: {
+      f: func
+    }
+  });
+  var wrappedFunc = instance.exports.f;
+  return wrappedFunc;
+}
+
+// Add a wasm function to the table.
+function addFunctionWasm(func, sig) {
+  var table = wasmTable;
+  var ret = table.length;
+
+  // Grow the table
+  try {
+    table.grow(1);
+  } catch (err) {
+    if (!err instanceof RangeError) {
+      throw err;
+    }
+    throw 'Unable to grow wasm table. Use a higher value for RESERVED_FUNCTION_POINTERS or set ALLOW_TABLE_GROWTH.';
+  }
+
+  // Insert new element
+  try {
+    // Attempting to call this with JS function will cause of table.set() to fail
+    table.set(ret, func);
+  } catch (err) {
+    if (!err instanceof TypeError) {
+      throw err;
+    }
+    assert(typeof sig !== 'undefined', 'Missing signature argument to addFunction');
+    var wrapped = convertJsFunctionToWasm(func, sig);
+    table.set(ret, wrapped);
+  }
+
+  return ret;
+}
+
+function removeFunctionWasm(index) {
+  // TODO(sbc): Look into implementing this to allow re-using of table slots
+}
+
+// 'sig' parameter is required for the llvm backend but only when func is not
+// already a WebAssembly function.
 function addFunction(func, sig) {
+
+
   var base = 0;
   for (var i = base; i < base + 0; i++) {
     if (!functionPointers[i]) {
@@ -699,9 +562,11 @@ function addFunction(func, sig) {
     }
   }
   throw 'Finished up all reserved function pointers. Use a higher value for RESERVED_FUNCTION_POINTERS.';
+
 }
 
 function removeFunction(index) {
+
   functionPointers[index-jsCallStartIndex] = null;
 }
 
@@ -747,13 +612,18 @@ function dynCall(sig, ptr, args) {
   }
 }
 
+var tempRet0 = 0;
+
+var setTempRet0 = function(value) {
+  tempRet0 = value;
+};
+
+var getTempRet0 = function() {
+  return tempRet0;
+};
 
 
 var Runtime = {
-  // FIXME backwards compatibility layer for ports. Support some Runtime.*
-  //       for now, fix it there, then remove it from here. That way we
-  //       can minimize any period of breakage.
-  dynCall: dynCall, // for SDL2 port
 };
 
 // The address globals begin at. Very low in memory, for code size and optimization opportunities.
@@ -761,6 +631,7 @@ var Runtime = {
 // Then the stack.
 // Then 'dynamic' memory for sbrk.
 var GLOBAL_BASE = 1024;
+
 
 
 
@@ -775,102 +646,17 @@ var GLOBAL_BASE = 1024;
 //    is up at http://kripken.github.io/emscripten-site/docs/api_reference/preamble.js.html
 
 
+var wasmBinary;if (Module['wasmBinary']) wasmBinary = Module['wasmBinary'];
+var noExitRuntime;if (Module['noExitRuntime']) noExitRuntime = Module['noExitRuntime'];
 
-//========================================
-// Runtime essentials
-//========================================
 
-var ABORT = 0; // whether we are quitting the application. no code should run after this. set in exit() and abort()
-var EXITSTATUS = 0;
-
-/** @type {function(*, string=)} */
-function assert(condition, text) {
-  if (!condition) {
-    abort('Assertion failed: ' + text);
-  }
+if (typeof WebAssembly !== 'object') {
+  err('no native wasm support detected');
 }
 
-var globalScope = this;
 
-// Returns the C function with a specified identifier (for C++, you need to do manual name mangling)
-function getCFunc(ident) {
-  var func = Module['_' + ident]; // closure exported function
-  assert(func, 'Cannot call unknown function ' + ident + ', make sure it is exported');
-  return func;
-}
-
-var JSfuncs = {
-  // Helpers for cwrap -- it can't refer to Runtime directly because it might
-  // be renamed by closure, instead it calls JSfuncs['stackSave'].body to find
-  // out what the minified function name is.
-  'stackSave': function() {
-    stackSave()
-  },
-  'stackRestore': function() {
-    stackRestore()
-  },
-  // type conversion from js to c
-  'arrayToC' : function(arr) {
-    var ret = stackAlloc(arr.length);
-    writeArrayToMemory(arr, ret);
-    return ret;
-  },
-  'stringToC' : function(str) {
-    var ret = 0;
-    if (str !== null && str !== undefined && str !== 0) { // null string
-      // at most 4 bytes per UTF-8 code point, +1 for the trailing '\0'
-      var len = (str.length << 2) + 1;
-      ret = stackAlloc(len);
-      stringToUTF8(str, ret, len);
-    }
-    return ret;
-  }
-};
-
-// For fast lookup of conversion functions
-var toC = {
-  'string': JSfuncs['stringToC'], 'array': JSfuncs['arrayToC']
-};
-
-// C calling interface.
-function ccall (ident, returnType, argTypes, args, opts) {
-  var func = getCFunc(ident);
-  var cArgs = [];
-  var stack = 0;
-  if (args) {
-    for (var i = 0; i < args.length; i++) {
-      var converter = toC[argTypes[i]];
-      if (converter) {
-        if (stack === 0) stack = stackSave();
-        cArgs[i] = converter(args[i]);
-      } else {
-        cArgs[i] = args[i];
-      }
-    }
-  }
-  var ret = func.apply(null, cArgs);
-  if (returnType === 'string') ret = Pointer_stringify(ret);
-  else if (returnType === 'boolean') ret = Boolean(ret);
-  if (stack !== 0) {
-    stackRestore(stack);
-  }
-  return ret;
-}
-
-function cwrap (ident, returnType, argTypes) {
-  argTypes = argTypes || [];
-  var cfunc = getCFunc(ident);
-  // When the function takes numbers and returns a number, we can just return
-  // the original function
-  var numericArgs = argTypes.every(function(type){ return type === 'number'});
-  var numericRet = returnType !== 'string';
-  if (numericRet && numericArgs) {
-    return cfunc;
-  }
-  return function() {
-    return ccall(ident, returnType, argTypes, arguments);
-  }
-}
+// In MINIMAL_RUNTIME, setValue() and getValue() are only available when building with safe heap enabled, for heap safety checking.
+// In traditional runtime, setValue() and getValue() are always available (although their use is highly discouraged due to perf penalties)
 
 /** @type {function(number, number, string, boolean=)} */
 function setValue(ptr, value, type, noSafe) {
@@ -905,11 +691,117 @@ function getValue(ptr, type, noSafe) {
   return null;
 }
 
+
+
+
+
+// Wasm globals
+
+var wasmMemory;
+
+// In fastcomp asm.js, we don't need a wasm Table at all.
+// In the wasm backend, we polyfill the WebAssembly object,
+// so this creates a (non-native-wasm) table for us.
+var wasmTable = new WebAssembly.Table({
+  'initial': 16,
+  'maximum': 16,
+  'element': 'anyfunc'
+});
+
+
+//========================================
+// Runtime essentials
+//========================================
+
+// whether we are quitting the application. no code should run after this.
+// set in exit() and abort()
+var ABORT = false;
+
+// set by exit() and abort().  Passed to 'onExit' handler.
+// NOTE: This is also used as the process return code code in shell environments
+// but only when noExitRuntime is false.
+var EXITSTATUS = 0;
+
+/** @type {function(*, string=)} */
+function assert(condition, text) {
+  if (!condition) {
+    abort('Assertion failed: ' + text);
+  }
+}
+
+// Returns the C function with a specified identifier (for C++, you need to do manual name mangling)
+function getCFunc(ident) {
+  var func = Module['_' + ident]; // closure exported function
+  assert(func, 'Cannot call unknown function ' + ident + ', make sure it is exported');
+  return func;
+}
+
+// C calling interface.
+function ccall(ident, returnType, argTypes, args, opts) {
+  // For fast lookup of conversion functions
+  var toC = {
+    'string': function(str) {
+      var ret = 0;
+      if (str !== null && str !== undefined && str !== 0) { // null string
+        // at most 4 bytes per UTF-8 code point, +1 for the trailing '\0'
+        var len = (str.length << 2) + 1;
+        ret = stackAlloc(len);
+        stringToUTF8(str, ret, len);
+      }
+      return ret;
+    },
+    'array': function(arr) {
+      var ret = stackAlloc(arr.length);
+      writeArrayToMemory(arr, ret);
+      return ret;
+    }
+  };
+
+  function convertReturnValue(ret) {
+    if (returnType === 'string') return UTF8ToString(ret);
+    if (returnType === 'boolean') return Boolean(ret);
+    return ret;
+  }
+
+  var func = getCFunc(ident);
+  var cArgs = [];
+  var stack = 0;
+  if (args) {
+    for (var i = 0; i < args.length; i++) {
+      var converter = toC[argTypes[i]];
+      if (converter) {
+        if (stack === 0) stack = stackSave();
+        cArgs[i] = converter(args[i]);
+      } else {
+        cArgs[i] = args[i];
+      }
+    }
+  }
+  var ret = func.apply(null, cArgs);
+
+  ret = convertReturnValue(ret);
+  if (stack !== 0) stackRestore(stack);
+  return ret;
+}
+
+function cwrap(ident, returnType, argTypes, opts) {
+  argTypes = argTypes || [];
+  // When the function takes numbers and returns a number, we can just return
+  // the original function
+  var numericArgs = argTypes.every(function(type){ return type === 'number'});
+  var numericRet = returnType !== 'string';
+  if (numericRet && numericArgs && !opts) {
+    return getCFunc(ident);
+  }
+  return function() {
+    return ccall(ident, returnType, argTypes, arguments, opts);
+  }
+}
+
 var ALLOC_NORMAL = 0; // Tries to use _malloc()
 var ALLOC_STACK = 1; // Lives for the duration of the current function call
-var ALLOC_STATIC = 2; // Cannot be freed
-var ALLOC_DYNAMIC = 3; // Cannot be freed except through sbrk
-var ALLOC_NONE = 4; // Do not allocate
+var ALLOC_DYNAMIC = 2; // Cannot be freed except through sbrk
+var ALLOC_NONE = 3; // Do not allocate
 
 // allocate(): This is for internal use. You can use it yourself as well, but the interface
 //             is a little tricky (see docs right below). The reason is that it is optimized
@@ -941,7 +833,9 @@ function allocate(slab, types, allocator, ptr) {
   if (allocator == ALLOC_NONE) {
     ret = ptr;
   } else {
-    ret = [typeof _malloc === 'function' ? _malloc : staticAlloc, stackAlloc, staticAlloc, dynamicAlloc][allocator === undefined ? ALLOC_STATIC : allocator](Math.max(size, singleType ? 1 : types.length));
+    ret = [_malloc,
+    stackAlloc,
+    dynamicAlloc][allocator](Math.max(size, singleType ? 1 : types.length));
   }
 
   if (zeroinit) {
@@ -995,42 +889,16 @@ function allocate(slab, types, allocator, ptr) {
 
 // Allocate memory during any stage of startup - static memory early on, dynamic memory later, malloc when ready
 function getMemory(size) {
-  if (!staticSealed) return staticAlloc(size);
   if (!runtimeInitialized) return dynamicAlloc(size);
   return _malloc(size);
 }
 
+
+
+
 /** @type {function(number, number=)} */
 function Pointer_stringify(ptr, length) {
-  if (length === 0 || !ptr) return '';
-  // TODO: use TextDecoder
-  // Find the length, and check for UTF while doing so
-  var hasUtf = 0;
-  var t;
-  var i = 0;
-  while (1) {
-    t = HEAPU8[(((ptr)+(i))>>0)];
-    hasUtf |= t;
-    if (t == 0 && !length) break;
-    i++;
-    if (length && i == length) break;
-  }
-  if (!length) length = i;
-
-  var ret = '';
-
-  if (hasUtf < 128) {
-    var MAX_CHUNK = 1024; // split up into chunks, because .apply on a huge string can overflow the stack
-    var curr;
-    while (length > 0) {
-      curr = String.fromCharCode.apply(String, HEAPU8.subarray(ptr, ptr + Math.min(length, MAX_CHUNK)));
-      ret = ret ? ret + curr : curr;
-      ptr += MAX_CHUNK;
-      length -= MAX_CHUNK;
-    }
-    return ret;
-  }
-  return UTF8ToString(ptr);
+  abort("this function has been removed - you should use UTF8ToString(ptr, maxBytesToRead) instead!");
 }
 
 // Given a pointer 'ptr' to a null-terminated ASCII-encoded string in the emscripten HEAP, returns
@@ -1039,7 +907,7 @@ function Pointer_stringify(ptr, length) {
 function AsciiToString(ptr) {
   var str = '';
   while (1) {
-    var ch = HEAP8[((ptr++)>>0)];
+    var ch = HEAPU8[((ptr++)>>0)];
     if (!ch) return str;
     str += String.fromCharCode(ch);
   }
@@ -1052,46 +920,46 @@ function stringToAscii(str, outPtr) {
   return writeAsciiToMemory(str, outPtr, false);
 }
 
+
 // Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the given array that contains uint8 values, returns
 // a copy of that string as a Javascript String object.
 
 var UTF8Decoder = typeof TextDecoder !== 'undefined' ? new TextDecoder('utf8') : undefined;
-function UTF8ArrayToString(u8Array, idx) {
+
+/**
+ * @param {number} idx
+ * @param {number=} maxBytesToRead
+ * @return {string}
+ */
+function UTF8ArrayToString(u8Array, idx, maxBytesToRead) {
+  var endIdx = idx + maxBytesToRead;
   var endPtr = idx;
   // TextDecoder needs to know the byte length in advance, it doesn't stop on null terminator by itself.
   // Also, use the length info to avoid running tiny strings through TextDecoder, since .subarray() allocates garbage.
-  while (u8Array[endPtr]) ++endPtr;
+  // (As a tiny code save trick, compare endPtr against endIdx using a negation, so that undefined means Infinity)
+  while (u8Array[endPtr] && !(endPtr >= endIdx)) ++endPtr;
 
   if (endPtr - idx > 16 && u8Array.subarray && UTF8Decoder) {
     return UTF8Decoder.decode(u8Array.subarray(idx, endPtr));
   } else {
-    var u0, u1, u2, u3, u4, u5;
-
     var str = '';
-    while (1) {
-      // For UTF8 byte structure, see http://en.wikipedia.org/wiki/UTF-8#Description and https://www.ietf.org/rfc/rfc2279.txt and https://tools.ietf.org/html/rfc3629
-      u0 = u8Array[idx++];
-      if (!u0) return str;
+    // If building with TextDecoder, we have already computed the string length above, so test loop end condition against that
+    while (idx < endPtr) {
+      // For UTF8 byte structure, see:
+      // http://en.wikipedia.org/wiki/UTF-8#Description
+      // https://www.ietf.org/rfc/rfc2279.txt
+      // https://tools.ietf.org/html/rfc3629
+      var u0 = u8Array[idx++];
       if (!(u0 & 0x80)) { str += String.fromCharCode(u0); continue; }
-      u1 = u8Array[idx++] & 63;
+      var u1 = u8Array[idx++] & 63;
       if ((u0 & 0xE0) == 0xC0) { str += String.fromCharCode(((u0 & 31) << 6) | u1); continue; }
-      u2 = u8Array[idx++] & 63;
+      var u2 = u8Array[idx++] & 63;
       if ((u0 & 0xF0) == 0xE0) {
         u0 = ((u0 & 15) << 12) | (u1 << 6) | u2;
       } else {
-        u3 = u8Array[idx++] & 63;
-        if ((u0 & 0xF8) == 0xF0) {
-          u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | u3;
-        } else {
-          u4 = u8Array[idx++] & 63;
-          if ((u0 & 0xFC) == 0xF8) {
-            u0 = ((u0 & 3) << 24) | (u1 << 18) | (u2 << 12) | (u3 << 6) | u4;
-          } else {
-            u5 = u8Array[idx++] & 63;
-            u0 = ((u0 & 1) << 30) | (u1 << 24) | (u2 << 18) | (u3 << 12) | (u4 << 6) | u5;
-          }
-        }
+        u0 = ((u0 & 7) << 18) | (u1 << 12) | (u2 << 6) | (u8Array[idx++] & 63);
       }
+
       if (u0 < 0x10000) {
         str += String.fromCharCode(u0);
       } else {
@@ -1100,13 +968,26 @@ function UTF8ArrayToString(u8Array, idx) {
       }
     }
   }
+  return str;
 }
 
-// Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the emscripten HEAP, returns
-// a copy of that string as a Javascript String object.
-
-function UTF8ToString(ptr) {
-  return UTF8ArrayToString(HEAPU8,ptr);
+// Given a pointer 'ptr' to a null-terminated UTF8-encoded string in the emscripten HEAP, returns a
+// copy of that string as a Javascript String object.
+// maxBytesToRead: an optional length that specifies the maximum number of bytes to read. You can omit
+//                 this parameter to scan the string until the first \0 byte. If maxBytesToRead is
+//                 passed, and the string at [ptr, ptr+maxBytesToReadr[ contains a null byte in the
+//                 middle, then the string will cut short at that byte index (i.e. maxBytesToRead will
+//                 not produce a string of exact length [ptr, ptr+maxBytesToRead[)
+//                 N.B. mixing frequent uses of UTF8ToString() with and without maxBytesToRead may
+//                 throw JS JIT optimizations off, so it is worth to consider consistently using one
+//                 style or the other.
+/**
+ * @param {number} ptr
+ * @param {number=} maxBytesToRead
+ * @return {string}
+ */
+function UTF8ToString(ptr, maxBytesToRead) {
+  return ptr ? UTF8ArrayToString(HEAPU8, ptr, maxBytesToRead) : '';
 }
 
 // Copies the given Javascript String object 'str' to the given byte array at address 'outIdx',
@@ -1116,8 +997,9 @@ function UTF8ToString(ptr) {
 //   str: the Javascript string to copy.
 //   outU8Array: the array to copy to. Each index in this array is assumed to be one 8-byte element.
 //   outIdx: The starting offset in the array to begin the copying.
-//   maxBytesToWrite: The maximum number of bytes this function can write to the array. This count should include the null
-//                    terminator, i.e. if maxBytesToWrite=1, only the null terminator will be written and nothing else.
+//   maxBytesToWrite: The maximum number of bytes this function can write to the array.
+//                    This count should include the null terminator,
+//                    i.e. if maxBytesToWrite=1, only the null terminator will be written and nothing else.
 //                    maxBytesToWrite=0 does not write any bytes to the output, not even the null terminator.
 // Returns the number of bytes written, EXCLUDING the null terminator.
 
@@ -1132,7 +1014,10 @@ function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
     // See http://unicode.org/faq/utf_bom.html#utf16-3
     // For UTF8 byte structure, see http://en.wikipedia.org/wiki/UTF-8#Description and https://www.ietf.org/rfc/rfc2279.txt and https://tools.ietf.org/html/rfc3629
     var u = str.charCodeAt(i); // possibly a lead surrogate
-    if (u >= 0xD800 && u <= 0xDFFF) u = 0x10000 + ((u & 0x3FF) << 10) | (str.charCodeAt(++i) & 0x3FF);
+    if (u >= 0xD800 && u <= 0xDFFF) {
+      var u1 = str.charCodeAt(++i);
+      u = 0x10000 + ((u & 0x3FF) << 10) | (u1 & 0x3FF);
+    }
     if (u <= 0x7F) {
       if (outIdx >= endIdx) break;
       outU8Array[outIdx++] = u;
@@ -1145,24 +1030,9 @@ function stringToUTF8Array(str, outU8Array, outIdx, maxBytesToWrite) {
       outU8Array[outIdx++] = 0xE0 | (u >> 12);
       outU8Array[outIdx++] = 0x80 | ((u >> 6) & 63);
       outU8Array[outIdx++] = 0x80 | (u & 63);
-    } else if (u <= 0x1FFFFF) {
+    } else {
       if (outIdx + 3 >= endIdx) break;
       outU8Array[outIdx++] = 0xF0 | (u >> 18);
-      outU8Array[outIdx++] = 0x80 | ((u >> 12) & 63);
-      outU8Array[outIdx++] = 0x80 | ((u >> 6) & 63);
-      outU8Array[outIdx++] = 0x80 | (u & 63);
-    } else if (u <= 0x3FFFFFF) {
-      if (outIdx + 4 >= endIdx) break;
-      outU8Array[outIdx++] = 0xF8 | (u >> 24);
-      outU8Array[outIdx++] = 0x80 | ((u >> 18) & 63);
-      outU8Array[outIdx++] = 0x80 | ((u >> 12) & 63);
-      outU8Array[outIdx++] = 0x80 | ((u >> 6) & 63);
-      outU8Array[outIdx++] = 0x80 | (u & 63);
-    } else {
-      if (outIdx + 5 >= endIdx) break;
-      outU8Array[outIdx++] = 0xFC | (u >> 30);
-      outU8Array[outIdx++] = 0x80 | ((u >> 24) & 63);
-      outU8Array[outIdx++] = 0x80 | ((u >> 18) & 63);
       outU8Array[outIdx++] = 0x80 | ((u >> 12) & 63);
       outU8Array[outIdx++] = 0x80 | ((u >> 6) & 63);
       outU8Array[outIdx++] = 0x80 | (u & 63);
@@ -1183,7 +1053,6 @@ function stringToUTF8(str, outPtr, maxBytesToWrite) {
 }
 
 // Returns the number of bytes the given Javascript string takes if encoded as a UTF8 byte array, EXCLUDING the null terminator byte.
-
 function lengthBytesUTF8(str) {
   var len = 0;
   for (var i = 0; i < str.length; ++i) {
@@ -1191,22 +1060,14 @@ function lengthBytesUTF8(str) {
     // See http://unicode.org/faq/utf_bom.html#utf16-3
     var u = str.charCodeAt(i); // possibly a lead surrogate
     if (u >= 0xD800 && u <= 0xDFFF) u = 0x10000 + ((u & 0x3FF) << 10) | (str.charCodeAt(++i) & 0x3FF);
-    if (u <= 0x7F) {
-      ++len;
-    } else if (u <= 0x7FF) {
-      len += 2;
-    } else if (u <= 0xFFFF) {
-      len += 3;
-    } else if (u <= 0x1FFFFF) {
-      len += 4;
-    } else if (u <= 0x3FFFFFF) {
-      len += 5;
-    } else {
-      len += 6;
-    }
+    if (u <= 0x7F) ++len;
+    else if (u <= 0x7FF) len += 2;
+    else if (u <= 0xFFFF) len += 3;
+    else len += 4;
   }
   return len;
 }
+
 
 // Given a pointer 'ptr' to a null-terminated UTF16LE-encoded string in the emscripten HEAP, returns
 // a copy of that string as a Javascript String object.
@@ -1361,232 +1222,6 @@ function allocateUTF8OnStack(str) {
   return ret;
 }
 
-function demangle(func) {
-  return func;
-}
-
-function demangleAll(text) {
-  var regex =
-    /__Z[\w\d_]+/g;
-  return text.replace(regex,
-    function(x) {
-      var y = demangle(x);
-      return x === y ? x : (x + ' [' + y + ']');
-    });
-}
-
-function jsStackTrace() {
-  var err = new Error();
-  if (!err.stack) {
-    // IE10+ special cases: It does have callstack info, but it is only populated if an Error object is thrown,
-    // so try that as a special-case.
-    try {
-      throw new Error(0);
-    } catch(e) {
-      err = e;
-    }
-    if (!err.stack) {
-      return '(no stack trace available)';
-    }
-  }
-  return err.stack.toString();
-}
-
-function stackTrace() {
-  var js = jsStackTrace();
-  if (Module['extraStackTrace']) js += '\n' + Module['extraStackTrace']();
-  return demangleAll(js);
-}
-
-// Memory management
-
-var PAGE_SIZE = 16384;
-var WASM_PAGE_SIZE = 65536;
-var ASMJS_PAGE_SIZE = 16777216;
-var MIN_TOTAL_MEMORY = 16777216;
-
-function alignUp(x, multiple) {
-  if (x % multiple > 0) {
-    x += multiple - (x % multiple);
-  }
-  return x;
-}
-
-var HEAP,
-/** @type {ArrayBuffer} */
-  buffer,
-/** @type {Int8Array} */
-  HEAP8,
-/** @type {Uint8Array} */
-  HEAPU8,
-/** @type {Int16Array} */
-  HEAP16,
-/** @type {Uint16Array} */
-  HEAPU16,
-/** @type {Int32Array} */
-  HEAP32,
-/** @type {Uint32Array} */
-  HEAPU32,
-/** @type {Float32Array} */
-  HEAPF32,
-/** @type {Float64Array} */
-  HEAPF64;
-
-function updateGlobalBuffer(buf) {
-  Module['buffer'] = buffer = buf;
-}
-
-function updateGlobalBufferViews() {
-  Module['HEAP8'] = HEAP8 = new Int8Array(buffer);
-  Module['HEAP16'] = HEAP16 = new Int16Array(buffer);
-  Module['HEAP32'] = HEAP32 = new Int32Array(buffer);
-  Module['HEAPU8'] = HEAPU8 = new Uint8Array(buffer);
-  Module['HEAPU16'] = HEAPU16 = new Uint16Array(buffer);
-  Module['HEAPU32'] = HEAPU32 = new Uint32Array(buffer);
-  Module['HEAPF32'] = HEAPF32 = new Float32Array(buffer);
-  Module['HEAPF64'] = HEAPF64 = new Float64Array(buffer);
-}
-
-var STATIC_BASE, STATICTOP, staticSealed; // static area
-var STACK_BASE, STACKTOP, STACK_MAX; // stack area
-var DYNAMIC_BASE, DYNAMICTOP_PTR; // dynamic area handled by sbrk
-
-  STATIC_BASE = STATICTOP = STACK_BASE = STACKTOP = STACK_MAX = DYNAMIC_BASE = DYNAMICTOP_PTR = 0;
-  staticSealed = false;
-
-
-
-function abortOnCannotGrowMemory() {
-  abort('Cannot enlarge memory arrays. Either (1) compile with  -s TOTAL_MEMORY=X  with X higher than the current value ' + TOTAL_MEMORY + ', (2) compile with  -s ALLOW_MEMORY_GROWTH=1  which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with  -s ABORTING_MALLOC=0 ');
-}
-
-
-function enlargeMemory() {
-  abortOnCannotGrowMemory();
-}
-
-
-var TOTAL_STACK = Module['TOTAL_STACK'] || 5242880;
-var TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 16777216;
-if (TOTAL_MEMORY < TOTAL_STACK) Module.printErr('TOTAL_MEMORY should be larger than TOTAL_STACK, was ' + TOTAL_MEMORY + '! (TOTAL_STACK=' + TOTAL_STACK + ')');
-
-// Initialize the runtime's memory
-
-
-
-// Use a provided buffer, if there is one, or else allocate a new one
-if (Module['buffer']) {
-  buffer = Module['buffer'];
-} else {
-  // Use a WebAssembly memory where available
-  if (typeof WebAssembly === 'object' && typeof WebAssembly.Memory === 'function') {
-    Module['wasmMemory'] = new WebAssembly.Memory({ 'initial': TOTAL_MEMORY / WASM_PAGE_SIZE, 'maximum': TOTAL_MEMORY / WASM_PAGE_SIZE });
-    buffer = Module['wasmMemory'].buffer;
-  } else
-  {
-    buffer = new ArrayBuffer(TOTAL_MEMORY);
-  }
-  Module['buffer'] = buffer;
-}
-updateGlobalBufferViews();
-
-
-function getTotalMemory() {
-  return TOTAL_MEMORY;
-}
-
-// Endianness check (note: assumes compiler arch was little-endian)
-  HEAP32[0] = 0x63736d65; /* 'emsc' */
-HEAP16[1] = 0x6373;
-if (HEAPU8[2] !== 0x73 || HEAPU8[3] !== 0x63) throw 'Runtime error: expected the system to be little-endian!';
-
-function callRuntimeCallbacks(callbacks) {
-  while(callbacks.length > 0) {
-    var callback = callbacks.shift();
-    if (typeof callback == 'function') {
-      callback();
-      continue;
-    }
-    var func = callback.func;
-    if (typeof func === 'number') {
-      if (callback.arg === undefined) {
-        Module['dynCall_v'](func);
-      } else {
-        Module['dynCall_vi'](func, callback.arg);
-      }
-    } else {
-      func(callback.arg === undefined ? null : callback.arg);
-    }
-  }
-}
-
-var __ATPRERUN__  = []; // functions called before the runtime is initialized
-var __ATINIT__    = []; // functions called during startup
-var __ATMAIN__    = []; // functions called when main() is to be run
-var __ATEXIT__    = []; // functions called during shutdown
-var __ATPOSTRUN__ = []; // functions called after the runtime has exited
-
-var runtimeInitialized = false;
-var runtimeExited = false;
-
-
-function preRun() {
-  // compatibility - merge in anything from Module['preRun'] at this time
-  if (Module['preRun']) {
-    if (typeof Module['preRun'] == 'function') Module['preRun'] = [Module['preRun']];
-    while (Module['preRun'].length) {
-      addOnPreRun(Module['preRun'].shift());
-    }
-  }
-  callRuntimeCallbacks(__ATPRERUN__);
-}
-
-function ensureInitRuntime() {
-  if (runtimeInitialized) return;
-  runtimeInitialized = true;
-  callRuntimeCallbacks(__ATINIT__);
-}
-
-function preMain() {
-  callRuntimeCallbacks(__ATMAIN__);
-}
-
-function exitRuntime() {
-  callRuntimeCallbacks(__ATEXIT__);
-  runtimeExited = true;
-}
-
-function postRun() {
-  // compatibility - merge in anything from Module['postRun'] at this time
-  if (Module['postRun']) {
-    if (typeof Module['postRun'] == 'function') Module['postRun'] = [Module['postRun']];
-    while (Module['postRun'].length) {
-      addOnPostRun(Module['postRun'].shift());
-    }
-  }
-  callRuntimeCallbacks(__ATPOSTRUN__);
-}
-
-function addOnPreRun(cb) {
-  __ATPRERUN__.unshift(cb);
-}
-
-function addOnInit(cb) {
-  __ATINIT__.unshift(cb);
-}
-
-function addOnPreMain(cb) {
-  __ATMAIN__.unshift(cb);
-}
-
-function addOnExit(cb) {
-  __ATEXIT__.unshift(cb);
-}
-
-function addOnPostRun(cb) {
-  __ATPOSTRUN__.unshift(cb);
-}
-
 // Deprecated: This function should not be called because it is unsafe and does not provide
 // a maximum length limit of how many bytes it is allowed to write. Prefer calling the
 // function stringToUTF8Array() instead, which takes in a maximum length that can be used
@@ -1619,6 +1254,201 @@ function writeAsciiToMemory(str, buffer, dontAddNull) {
   if (!dontAddNull) HEAP8[((buffer)>>0)]=0;
 }
 
+
+
+
+// Memory management
+
+var PAGE_SIZE = 16384;
+var WASM_PAGE_SIZE = 65536;
+var ASMJS_PAGE_SIZE = 16777216;
+
+function alignUp(x, multiple) {
+  if (x % multiple > 0) {
+    x += multiple - (x % multiple);
+  }
+  return x;
+}
+
+var HEAP,
+/** @type {ArrayBuffer} */
+  buffer,
+/** @type {Int8Array} */
+  HEAP8,
+/** @type {Uint8Array} */
+  HEAPU8,
+/** @type {Int16Array} */
+  HEAP16,
+/** @type {Uint16Array} */
+  HEAPU16,
+/** @type {Int32Array} */
+  HEAP32,
+/** @type {Uint32Array} */
+  HEAPU32,
+/** @type {Float32Array} */
+  HEAPF32,
+/** @type {Float64Array} */
+  HEAPF64;
+
+function updateGlobalBufferAndViews(buf) {
+  buffer = buf;
+  Module['HEAP8'] = HEAP8 = new Int8Array(buf);
+  Module['HEAP16'] = HEAP16 = new Int16Array(buf);
+  Module['HEAP32'] = HEAP32 = new Int32Array(buf);
+  Module['HEAPU8'] = HEAPU8 = new Uint8Array(buf);
+  Module['HEAPU16'] = HEAPU16 = new Uint16Array(buf);
+  Module['HEAPU32'] = HEAPU32 = new Uint32Array(buf);
+  Module['HEAPF32'] = HEAPF32 = new Float32Array(buf);
+  Module['HEAPF64'] = HEAPF64 = new Float64Array(buf);
+}
+
+
+var STATIC_BASE = 1024,
+    STACK_BASE = 46720,
+    STACKTOP = STACK_BASE,
+    STACK_MAX = 5289600,
+    DYNAMIC_BASE = 5289600,
+    DYNAMICTOP_PTR = 46512;
+
+
+
+
+var TOTAL_STACK = 5242880;
+
+var INITIAL_TOTAL_MEMORY = Module['TOTAL_MEMORY'] || 16777216;
+
+
+
+
+
+
+
+// In standalone mode, the wasm creates the memory, and the user can't provide it.
+// In non-standalone/normal mode, we create the memory here.
+
+// Create the main memory. (Note: this isn't used in STANDALONE_WASM mode since the wasm
+// memory is created in the wasm, not in JS.)
+
+  if (Module['wasmMemory']) {
+    wasmMemory = Module['wasmMemory'];
+  } else
+  {
+    wasmMemory = new WebAssembly.Memory({
+      'initial': INITIAL_TOTAL_MEMORY / WASM_PAGE_SIZE
+      ,
+      'maximum': INITIAL_TOTAL_MEMORY / WASM_PAGE_SIZE
+    });
+  }
+
+
+if (wasmMemory) {
+  buffer = wasmMemory.buffer;
+}
+
+// If the user provides an incorrect length, just use that length instead rather than providing the user to
+// specifically provide the memory length with Module['TOTAL_MEMORY'].
+INITIAL_TOTAL_MEMORY = buffer.byteLength;
+updateGlobalBufferAndViews(buffer);
+
+HEAP32[DYNAMICTOP_PTR>>2] = DYNAMIC_BASE;
+
+
+
+
+
+
+
+
+
+
+function callRuntimeCallbacks(callbacks) {
+  while(callbacks.length > 0) {
+    var callback = callbacks.shift();
+    if (typeof callback == 'function') {
+      callback();
+      continue;
+    }
+    var func = callback.func;
+    if (typeof func === 'number') {
+      if (callback.arg === undefined) {
+        Module['dynCall_v'](func);
+      } else {
+        Module['dynCall_vi'](func, callback.arg);
+      }
+    } else {
+      func(callback.arg === undefined ? null : callback.arg);
+    }
+  }
+}
+
+var __ATPRERUN__  = []; // functions called before the runtime is initialized
+var __ATINIT__    = []; // functions called during startup
+var __ATMAIN__    = []; // functions called when main() is to be run
+var __ATEXIT__    = []; // functions called during shutdown
+var __ATPOSTRUN__ = []; // functions called after the main() is called
+
+var runtimeInitialized = false;
+var runtimeExited = false;
+
+
+function preRun() {
+
+  if (Module['preRun']) {
+    if (typeof Module['preRun'] == 'function') Module['preRun'] = [Module['preRun']];
+    while (Module['preRun'].length) {
+      addOnPreRun(Module['preRun'].shift());
+    }
+  }
+
+  callRuntimeCallbacks(__ATPRERUN__);
+}
+
+function initRuntime() {
+  runtimeInitialized = true;
+  
+  callRuntimeCallbacks(__ATINIT__);
+}
+
+function preMain() {
+  
+  callRuntimeCallbacks(__ATMAIN__);
+}
+
+function exitRuntime() {
+  runtimeExited = true;
+}
+
+function postRun() {
+
+  if (Module['postRun']) {
+    if (typeof Module['postRun'] == 'function') Module['postRun'] = [Module['postRun']];
+    while (Module['postRun'].length) {
+      addOnPostRun(Module['postRun'].shift());
+    }
+  }
+
+  callRuntimeCallbacks(__ATPOSTRUN__);
+}
+
+function addOnPreRun(cb) {
+  __ATPRERUN__.unshift(cb);
+}
+
+function addOnInit(cb) {
+  __ATINIT__.unshift(cb);
+}
+
+function addOnPreMain(cb) {
+  __ATMAIN__.unshift(cb);
+}
+
+function addOnExit(cb) {
+}
+
+function addOnPostRun(cb) {
+  __ATPOSTRUN__.unshift(cb);
+}
+
 function unSign(value, bits, ignore) {
   if (value >= 0) {
     return value;
@@ -1639,6 +1469,7 @@ function reSign(value, bits, ignore) {
   }
   return value;
 }
+
 
 
 var Math_abs = Math.abs;
@@ -1663,10 +1494,12 @@ var Math_max = Math.max;
 var Math_clz32 = Math.clz32;
 var Math_trunc = Math.trunc;
 
+
+
 // A counter of dependencies for calling run(). If we need to
 // do asynchronous work before running, increment this and
 // decrement it. Incrementing must happen in a place like
-// PRE_RUN_ADDITIONS (used by emcc to add file preloading).
+// Module.preRun (used by emcc to add file preloading).
 // Note that you can add dependencies in preRun, even though
 // it happens right before run - run will be postponed until
 // the dependencies are met.
@@ -1680,16 +1513,20 @@ function getUniqueRunDependency(id) {
 
 function addRunDependency(id) {
   runDependencies++;
+
   if (Module['monitorRunDependencies']) {
     Module['monitorRunDependencies'](runDependencies);
   }
+
 }
 
 function removeRunDependency(id) {
   runDependencies--;
+
   if (Module['monitorRunDependencies']) {
     Module['monitorRunDependencies'](runDependencies);
   }
+
   if (runDependencies == 0) {
     if (runDependencyWatcher !== null) {
       clearInterval(runDependencyWatcher);
@@ -1707,6 +1544,21 @@ Module["preloadedImages"] = {}; // maps url to image data
 Module["preloadedAudios"] = {}; // maps url to audio data
 
 
+function abort(what) {
+  if (Module['onAbort']) {
+    Module['onAbort'](what);
+  }
+
+  what += '';
+  out(what);
+  err(what);
+
+  ABORT = true;
+  EXITSTATUS = 1;
+
+  throw 'abort(' + what + '). Build with -s ASSERTIONS=1 for more info.';
+}
+
 
 var memoryInitializer = null;
 
@@ -1714,6 +1566,12 @@ var memoryInitializer = null;
 
 
 
+
+
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
 
 // Prefix of data URIs emitted by SINGLE_FILE and related options.
 var dataURIPrefix = 'data:application/octet-stream;base64,';
@@ -1728,279 +1586,136 @@ function isDataURI(filename) {
 
 
 
-function integrateWasmJS() {
-  // wasm.js has several methods for creating the compiled code module here:
-  //  * 'native-wasm' : use native WebAssembly support in the browser
-  //  * 'interpret-s-expr': load s-expression code from a .wast and interpret
-  //  * 'interpret-binary': load binary wasm and interpret
-  //  * 'interpret-asm2wasm': load asm.js code, translate to wasm, and interpret
-  //  * 'asmjs': no wasm, just load the asm.js code and use that (good for testing)
-  // The method is set at compile time (BINARYEN_METHOD)
-  // The method can be a comma-separated list, in which case, we will try the
-  // options one by one. Some of them can fail gracefully, and then we can try
-  // the next.
+var wasmBinaryFile = 'encoderWorker.wasm';
+if (!isDataURI(wasmBinaryFile)) {
+  wasmBinaryFile = locateFile(wasmBinaryFile);
+}
 
-  // inputs
-
-  var method = 'native-wasm';
-
-  var wasmTextFile = 'encoderWorker.wast';
-  var wasmBinaryFile = 'encoderWorker.wasm';
-  var asmjsCodeFile = 'encoderWorker.temp.asm.js';
-
-  if (typeof Module['locateFile'] === 'function') {
-    if (!isDataURI(wasmTextFile)) {
-      wasmTextFile = Module['locateFile'](wasmTextFile);
+function getBinary() {
+  try {
+    if (wasmBinary) {
+      return new Uint8Array(wasmBinary);
     }
-    if (!isDataURI(wasmBinaryFile)) {
-      wasmBinaryFile = Module['locateFile'](wasmBinaryFile);
-    }
-    if (!isDataURI(asmjsCodeFile)) {
-      asmjsCodeFile = Module['locateFile'](asmjsCodeFile);
+
+    if (readBinary) {
+      return readBinary(wasmBinaryFile);
+    } else {
+      throw "both async and sync fetching of the wasm failed";
     }
   }
+  catch (err) {
+    abort(err);
+  }
+}
 
-  // utilities
+function getBinaryPromise() {
+  // if we don't have the binary yet, and have the Fetch api, use that
+  // in some environments, like Electron's render process, Fetch api may be present, but have a different context than expected, let's only use it on the Web
+  if (!wasmBinary && (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && typeof fetch === 'function') {
+    return fetch(wasmBinaryFile, { credentials: 'same-origin' }).then(function(response) {
+      if (!response['ok']) {
+        throw "failed to load wasm binary file at '" + wasmBinaryFile + "'";
+      }
+      return response['arrayBuffer']();
+    }).catch(function () {
+      return getBinary();
+    });
+  }
+  // Otherwise, getBinary should be able to get it synchronously
+  return new Promise(function(resolve, reject) {
+    resolve(getBinary());
+  });
+}
 
-  var wasmPageSize = 64*1024;
 
+
+// Create the wasm instance.
+// Receives the wasm imports, returns the exports.
+function createWasm() {
+  // prepare imports
   var info = {
-    'global': null,
-    'env': null,
-    'asm2wasm': { // special asm2wasm imports
-      "f64-rem": function(x, y) {
-        return x % y;
-      },
-      "debugger": function() {
-        debugger;
-      }
+    'env': asmLibraryArg,
+    'wasi_unstable': asmLibraryArg
+    ,
+    'global': {
+      'NaN': NaN,
+      'Infinity': Infinity
     },
-    'parent': Module // Module inside wasm-js.cpp refers to wasm-js.cpp; this allows access to the outside program.
+    'global.Math': Math,
+    'asm2wasm': asm2wasmImports
   };
-
-  var exports = null;
-
-
-  function mergeMemory(newBuffer) {
-    // The wasm instance creates its memory. But static init code might have written to
-    // buffer already, including the mem init file, and we must copy it over in a proper merge.
-    // TODO: avoid this copy, by avoiding such static init writes
-    // TODO: in shorter term, just copy up to the last static init write
-    var oldBuffer = Module['buffer'];
-    if (newBuffer.byteLength < oldBuffer.byteLength) {
-      Module['printErr']('the new buffer in mergeMemory is smaller than the previous one. in native wasm, we should grow memory here');
-    }
-    var oldView = new Int8Array(oldBuffer);
-    var newView = new Int8Array(newBuffer);
+  // Load the wasm module and create an instance of using native support in the JS engine.
+  // handle a generated wasm instance, receiving its exports and
+  // performing other necessary setup
+  function receiveInstance(instance, module) {
+    var exports = instance.exports;
+    Module['asm'] = exports;
+    removeRunDependency('wasm-instantiate');
+  }
+   // we can't run yet (except in a pthread, where we have a custom sync instantiator)
+  addRunDependency('wasm-instantiate');
 
 
-    newView.set(oldView);
-    updateGlobalBuffer(newBuffer);
-    updateGlobalBufferViews();
+  function receiveInstantiatedSource(output) {
+    // 'output' is a WebAssemblyInstantiatedSource object which has both the module and instance.
+    // receiveInstance() will swap in the exports (to Module.asm) so they can be called
+      // TODO: Due to Closure regression https://github.com/google/closure-compiler/issues/3193, the above line no longer optimizes out down to the following line.
+      // When the regression is fixed, can restore the above USE_PTHREADS-enabled path.
+    receiveInstance(output['instance']);
   }
 
-  function fixImports(imports) {
-    return imports;
-  }
 
-  function getBinary() {
-    try {
-      if (Module['wasmBinary']) {
-        return new Uint8Array(Module['wasmBinary']);
-      }
-      if (Module['readBinary']) {
-        return Module['readBinary'](wasmBinaryFile);
-      } else {
-        throw "on the web, we need the wasm binary to be preloaded and set on Module['wasmBinary']. emcc.py will do that for you when generating HTML (but not JS)";
-      }
-    }
-    catch (err) {
-      abort(err);
-    }
-  }
-
-  function getBinaryPromise() {
-    // if we don't have the binary yet, and have the Fetch api, use that
-    // in some environments, like Electron's render process, Fetch api may be present, but have a different context than expected, let's only use it on the Web
-    if (!Module['wasmBinary'] && (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) && typeof fetch === 'function') {
-      return fetch(wasmBinaryFile, { credentials: 'same-origin' }).then(function(response) {
-        if (!response['ok']) {
-          throw "failed to load wasm binary file at '" + wasmBinaryFile + "'";
-        }
-        return response['arrayBuffer']();
-      }).catch(function () {
-        return getBinary();
-      });
-    }
-    // Otherwise, getBinary should be able to get it synchronously
-    return new Promise(function(resolve, reject) {
-      resolve(getBinary());
+  function instantiateArrayBuffer(receiver) {
+    return getBinaryPromise().then(function(binary) {
+      return WebAssembly.instantiate(binary, info);
+    }).then(receiver, function(reason) {
+      err('failed to asynchronously prepare wasm: ' + reason);
+      abort(reason);
     });
   }
 
-  // do-method functions
-
-
-  function doNativeWasm(global, env, providedBuffer) {
-    if (typeof WebAssembly !== 'object') {
-      Module['printErr']('no native wasm support detected');
-      return false;
-    }
-    // prepare memory import
-    if (!(Module['wasmMemory'] instanceof WebAssembly.Memory)) {
-      Module['printErr']('no native wasm Memory in use');
-      return false;
-    }
-    env['memory'] = Module['wasmMemory'];
-    // Load the wasm module and create an instance of using native support in the JS engine.
-    info['global'] = {
-      'NaN': NaN,
-      'Infinity': Infinity
-    };
-    info['global.Math'] = Math;
-    info['env'] = env;
-    // handle a generated wasm instance, receiving its exports and
-    // performing other necessary setup
-    function receiveInstance(instance, module) {
-      exports = instance.exports;
-      if (exports.memory) mergeMemory(exports.memory);
-      Module['asm'] = exports;
-      Module["usingWasm"] = true;
-      removeRunDependency('wasm-instantiate');
-    }
-    addRunDependency('wasm-instantiate');
-
-    // User shell pages can write their own Module.instantiateWasm = function(imports, successCallback) callback
-    // to manually instantiate the Wasm module themselves. This allows pages to run the instantiation parallel
-    // to any other async startup actions they are performing.
-    if (Module['instantiateWasm']) {
-      try {
-        return Module['instantiateWasm'](info, receiveInstance);
-      } catch(e) {
-        Module['printErr']('Module.instantiateWasm callback failed with error: ' + e);
-        return false;
-      }
-    }
-
-    function receiveInstantiatedSource(output) {
-      // 'output' is a WebAssemblyInstantiatedSource object which has both the module and instance.
-      // receiveInstance() will swap in the exports (to Module.asm) so they can be called
-      receiveInstance(output['instance'], output['module']);
-    }
-    function instantiateArrayBuffer(receiver) {
-      getBinaryPromise().then(function(binary) {
-        return WebAssembly.instantiate(binary, info);
-      }).then(receiver).catch(function(reason) {
-        Module['printErr']('failed to asynchronously prepare wasm: ' + reason);
-        abort(reason);
-      });
-    }
-    // Prefer streaming instantiation if available.
-    if (!Module['wasmBinary'] &&
+  // Prefer streaming instantiation if available.
+  function instantiateAsync() {
+    if (!wasmBinary &&
         typeof WebAssembly.instantiateStreaming === 'function' &&
         !isDataURI(wasmBinaryFile) &&
         typeof fetch === 'function') {
-      WebAssembly.instantiateStreaming(fetch(wasmBinaryFile, { credentials: 'same-origin' }), info)
-        .then(receiveInstantiatedSource)
-        .catch(function(reason) {
-          // We expect the most common failure cause to be a bad MIME type for the binary,
-          // in which case falling back to ArrayBuffer instantiation should work.
-          Module['printErr']('wasm streaming compile failed: ' + reason);
-          Module['printErr']('falling back to ArrayBuffer instantiation');
-          instantiateArrayBuffer(receiveInstantiatedSource);
-        });
+      fetch(wasmBinaryFile, { credentials: 'same-origin' }).then(function (response) {
+        var result = WebAssembly.instantiateStreaming(response, info);
+        return result.then(receiveInstantiatedSource, function(reason) {
+            // We expect the most common failure cause to be a bad MIME type for the binary,
+            // in which case falling back to ArrayBuffer instantiation should work.
+            err('wasm streaming compile failed: ' + reason);
+            err('falling back to ArrayBuffer instantiation');
+            instantiateArrayBuffer(receiveInstantiatedSource);
+          });
+      });
     } else {
-      instantiateArrayBuffer(receiveInstantiatedSource);
+      return instantiateArrayBuffer(receiveInstantiatedSource);
     }
-    return {}; // no exports yet; we'll fill them in later
+  }
+  // User shell pages can write their own Module.instantiateWasm = function(imports, successCallback) callback
+  // to manually instantiate the Wasm module themselves. This allows pages to run the instantiation parallel
+  // to any other async startup actions they are performing.
+  if (Module['instantiateWasm']) {
+    try {
+      var exports = Module['instantiateWasm'](info, receiveInstance);
+      return exports;
+    } catch(e) {
+      err('Module.instantiateWasm callback failed with error: ' + e);
+      return false;
+    }
   }
 
-
-  // We may have a preloaded value in Module.asm, save it
-  Module['asmPreload'] = Module['asm'];
-
-  // Memory growth integration code
-
-  var asmjsReallocBuffer = Module['reallocBuffer'];
-
-  var wasmReallocBuffer = function(size) {
-    var PAGE_MULTIPLE = Module["usingWasm"] ? WASM_PAGE_SIZE : ASMJS_PAGE_SIZE; // In wasm, heap size must be a multiple of 64KB. In asm.js, they need to be multiples of 16MB.
-    size = alignUp(size, PAGE_MULTIPLE); // round up to wasm page size
-    var old = Module['buffer'];
-    var oldSize = old.byteLength;
-    if (Module["usingWasm"]) {
-      // native wasm support
-      try {
-        var result = Module['wasmMemory'].grow((size - oldSize) / wasmPageSize); // .grow() takes a delta compared to the previous size
-        if (result !== (-1 | 0)) {
-          // success in native wasm memory growth, get the buffer from the memory
-          return Module['buffer'] = Module['wasmMemory'].buffer;
-        } else {
-          return null;
-        }
-      } catch(e) {
-        return null;
-      }
-    }
-  };
-
-  Module['reallocBuffer'] = function(size) {
-    if (finalMethod === 'asmjs') {
-      return asmjsReallocBuffer(size);
-    } else {
-      return wasmReallocBuffer(size);
-    }
-  };
-
-  // we may try more than one; this is the final one, that worked and we are using
-  var finalMethod = '';
-
-  // Provide an "asm.js function" for the application, called to "link" the asm.js module. We instantiate
-  // the wasm module at that time, and it receives imports and provides exports and so forth, the app
-  // doesn't need to care that it is wasm or olyfilled wasm or asm.js.
-
-  Module['asm'] = function(global, env, providedBuffer) {
-    env = fixImports(env);
-
-    // import table
-    if (!env['table']) {
-      var TABLE_SIZE = Module['wasmTableSize'];
-      if (TABLE_SIZE === undefined) TABLE_SIZE = 1024; // works in binaryen interpreter at least
-      var MAX_TABLE_SIZE = Module['wasmMaxTableSize'];
-      if (typeof WebAssembly === 'object' && typeof WebAssembly.Table === 'function') {
-        if (MAX_TABLE_SIZE !== undefined) {
-          env['table'] = new WebAssembly.Table({ 'initial': TABLE_SIZE, 'maximum': MAX_TABLE_SIZE, 'element': 'anyfunc' });
-        } else {
-          env['table'] = new WebAssembly.Table({ 'initial': TABLE_SIZE, element: 'anyfunc' });
-        }
-      } else {
-        env['table'] = new Array(TABLE_SIZE); // works in binaryen interpreter at least
-      }
-      Module['wasmTable'] = env['table'];
-    }
-
-    if (!env['memoryBase']) {
-      env['memoryBase'] = Module['STATIC_BASE']; // tell the memory segments where to place themselves
-    }
-    if (!env['tableBase']) {
-      env['tableBase'] = 0; // table starts at 0 by default, in dynamic linking this will change
-    }
-
-    // try the methods. each should return the exports if it succeeded
-
-    var exports;
-    exports = doNativeWasm(global, env, providedBuffer);
-
-    if (!exports) abort('no binaryen method succeeded. consider enabling more options, like interpreting, if you want that: https://github.com/kripken/emscripten/wiki/WebAssembly#binaryen-methods');
-
-
-    return exports;
-  };
-
-  var methodHandler = Module['asm']; // note our method handler, as we may modify Module['asm'] later
+  instantiateAsync();
+  return {}; // no exports yet; we'll fill them in later
 }
 
-integrateWasmJS();
+Module['asm'] = createWasm;
+
+// Globals used by JS i64 conversions
+var tempDouble;
+var tempI64;
 
 // === Body ===
 
@@ -2010,10 +1725,8 @@ var ASM_CONSTS = [];
 
 
 
-STATIC_BASE = GLOBAL_BASE;
-
-STATICTOP = STATIC_BASE + 35552;
-/* global initializers */  __ATINIT__.push();
+// STATICTOP = STATIC_BASE + 45696;
+/* global initializers */ /*__ATINIT__.push();*/
 
 
 
@@ -2021,68 +1734,245 @@ STATICTOP = STATIC_BASE + 35552;
 
 
 
-var STATIC_BUMP = 35552;
-Module["STATIC_BASE"] = STATIC_BASE;
-Module["STATIC_BUMP"] = STATIC_BUMP;
 
 /* no memory initializer */
-var tempDoublePtr = STATICTOP; STATICTOP += 16;
+var tempDoublePtr = 46704
 
 function copyTempFloat(ptr) { // functions, because inlining this code increases code size too much
-
   HEAP8[tempDoublePtr] = HEAP8[ptr];
-
   HEAP8[tempDoublePtr+1] = HEAP8[ptr+1];
-
   HEAP8[tempDoublePtr+2] = HEAP8[ptr+2];
-
   HEAP8[tempDoublePtr+3] = HEAP8[ptr+3];
-
 }
 
 function copyTempDouble(ptr) {
-
   HEAP8[tempDoublePtr] = HEAP8[ptr];
-
   HEAP8[tempDoublePtr+1] = HEAP8[ptr+1];
-
   HEAP8[tempDoublePtr+2] = HEAP8[ptr+2];
-
   HEAP8[tempDoublePtr+3] = HEAP8[ptr+3];
-
   HEAP8[tempDoublePtr+4] = HEAP8[ptr+4];
-
   HEAP8[tempDoublePtr+5] = HEAP8[ptr+5];
-
   HEAP8[tempDoublePtr+6] = HEAP8[ptr+6];
-
   HEAP8[tempDoublePtr+7] = HEAP8[ptr+7];
-
 }
 
 // {{PRE_LIBRARY}}
 
 
-  function _abort() {
-      Module['abort']();
+  function demangle(func) {
+      return func;
     }
 
-  var _llvm_ctlz_i32=true;
+  function demangleAll(text) {
+      var regex =
+        /\b__Z[\w\d_]+/g;
+      return text.replace(regex,
+        function(x) {
+          var y = demangle(x);
+          return x === y ? x : (y + ' [' + x + ']');
+        });
+    }
+
+  function jsStackTrace() {
+      var err = new Error();
+      if (!err.stack) {
+        // IE10+ special cases: It does have callstack info, but it is only populated if an Error object is thrown,
+        // so try that as a special-case.
+        try {
+          throw new Error(0);
+        } catch(e) {
+          err = e;
+        }
+        if (!err.stack) {
+          return '(no stack trace available)';
+        }
+      }
+      return err.stack.toString();
+    }
+
+  function stackTrace() {
+      var js = jsStackTrace();
+      if (Module['extraStackTrace']) js += '\n' + Module['extraStackTrace']();
+      return demangleAll(js);
+    }
+
+  
+  
+  
+  var PATH={splitPath:function(filename) {
+        var splitPathRe = /^(\/?|)([\s\S]*?)((?:\.{1,2}|[^\/]+?|)(\.[^.\/]*|))(?:[\/]*)$/;
+        return splitPathRe.exec(filename).slice(1);
+      },normalizeArray:function(parts, allowAboveRoot) {
+        // if the path tries to go above the root, `up` ends up > 0
+        var up = 0;
+        for (var i = parts.length - 1; i >= 0; i--) {
+          var last = parts[i];
+          if (last === '.') {
+            parts.splice(i, 1);
+          } else if (last === '..') {
+            parts.splice(i, 1);
+            up++;
+          } else if (up) {
+            parts.splice(i, 1);
+            up--;
+          }
+        }
+        // if the path is allowed to go above the root, restore leading ..s
+        if (allowAboveRoot) {
+          for (; up; up--) {
+            parts.unshift('..');
+          }
+        }
+        return parts;
+      },normalize:function(path) {
+        var isAbsolute = path.charAt(0) === '/',
+            trailingSlash = path.substr(-1) === '/';
+        // Normalize the path
+        path = PATH.normalizeArray(path.split('/').filter(function(p) {
+          return !!p;
+        }), !isAbsolute).join('/');
+        if (!path && !isAbsolute) {
+          path = '.';
+        }
+        if (path && trailingSlash) {
+          path += '/';
+        }
+        return (isAbsolute ? '/' : '') + path;
+      },dirname:function(path) {
+        var result = PATH.splitPath(path),
+            root = result[0],
+            dir = result[1];
+        if (!root && !dir) {
+          // No dirname whatsoever
+          return '.';
+        }
+        if (dir) {
+          // It has a dirname, strip trailing slash
+          dir = dir.substr(0, dir.length - 1);
+        }
+        return root + dir;
+      },basename:function(path) {
+        // EMSCRIPTEN return '/'' for '/', not an empty string
+        if (path === '/') return '/';
+        var lastSlash = path.lastIndexOf('/');
+        if (lastSlash === -1) return path;
+        return path.substr(lastSlash+1);
+      },extname:function(path) {
+        return PATH.splitPath(path)[3];
+      },join:function() {
+        var paths = Array.prototype.slice.call(arguments, 0);
+        return PATH.normalize(paths.join('/'));
+      },join2:function(l, r) {
+        return PATH.normalize(l + '/' + r);
+      }};var SYSCALLS={buffers:[null,[],[]],printChar:function(stream, curr) {
+        var buffer = SYSCALLS.buffers[stream];
+        if (curr === 0 || curr === 10) {
+          (stream === 1 ? out : err)(UTF8ArrayToString(buffer, 0));
+          buffer.length = 0;
+        } else {
+          buffer.push(curr);
+        }
+      },varargs:0,get:function(varargs) {
+        SYSCALLS.varargs += 4;
+        var ret = HEAP32[(((SYSCALLS.varargs)-(4))>>2)];
+        return ret;
+      },getStr:function() {
+        var ret = UTF8ToString(SYSCALLS.get());
+        return ret;
+      },get64:function() {
+        var low = SYSCALLS.get(), high = SYSCALLS.get();
+        return low;
+      },getZero:function() {
+        SYSCALLS.get();
+      }};function _fd_close(fd) {try {
+  
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_close(
+  ) {
+  return _fd_close.apply(null, arguments)
+  }
+
+  
+  function _fd_seek(fd, offset_low, offset_high, whence, newOffset) {try {
+  
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_seek(
+  ) {
+  return _fd_seek.apply(null, arguments)
+  }
+
+  
+  
+  function flush_NO_FILESYSTEM() {
+      // flush anything remaining in the buffers during shutdown
+      var fflush = Module["_fflush"];
+      if (fflush) fflush(0);
+      var buffers = SYSCALLS.buffers;
+      if (buffers[1].length) SYSCALLS.printChar(1, 10);
+      if (buffers[2].length) SYSCALLS.printChar(2, 10);
+    }function _fd_write(fd, iov, iovcnt, pnum) {try {
+  
+      // hack to support printf in SYSCALLS_REQUIRE_FILESYSTEM=0
+      var num = 0;
+      for (var i = 0; i < iovcnt; i++) {
+        var ptr = HEAP32[(((iov)+(i*8))>>2)];
+        var len = HEAP32[(((iov)+(i*8 + 4))>>2)];
+        for (var j = 0; j < len; j++) {
+          SYSCALLS.printChar(fd, HEAPU8[ptr+j]);
+        }
+        num += len;
+      }
+      HEAP32[((pnum)>>2)]=num
+      return 0;
+    } catch (e) {
+    if (typeof FS === 'undefined' || !(e instanceof FS.ErrnoError)) abort(e);
+    return e.errno;
+  }
+  }function ___wasi_fd_write(
+  ) {
+  return _fd_write.apply(null, arguments)
+  }
+
+  function _abort() {
+      abort();
+    }
+
+  function _emscripten_get_heap_size() {
+      return HEAP8.length;
+    }
+
+   
+
+  
+  function abortOnCannotGrowMemory(requestedSize) {
+      abort('OOM');
+    }function _emscripten_resize_heap(requestedSize) {
+      abortOnCannotGrowMemory(requestedSize);
+    }
 
   
   function _llvm_exp2_f32(x) {
       return Math.pow(2, x);
-    }function _llvm_exp2_f64() {
-  return _llvm_exp2_f32.apply(null, arguments)
+    }function _llvm_exp2_f64(a0
+  ) {
+  return _llvm_exp2_f32(a0);
   }
 
-  var _llvm_fabs_f32=Math_abs;
-
-  var _llvm_floor_f32=Math_floor;
-
-  var _llvm_floor_f64=Math_floor;
-
-  var _llvm_pow_f64=Math_pow;
+  
+  function _llvm_log10_f32(x) {
+      return Math.log(x) / Math.LN10; // TODO: Math.log10, when browser support is there
+    }function _llvm_log10_f64(a0
+  ) {
+  return _llvm_log10_f32(a0);
+  }
 
   function _llvm_stackrestore(p) {
       var self = _llvm_stacksave;
@@ -2103,34 +1993,23 @@ function copyTempDouble(ptr) {
   
   function _emscripten_memcpy_big(dest, src, num) {
       HEAPU8.set(HEAPU8.subarray(src, src+num), dest);
-      return dest;
-    } 
-
+    }
+  
    
 
    
 
+   
+
+  
   
     
-
-  
-  function ___setErrNo(value) {
-      if (Module['___errno_location']) HEAP32[((Module['___errno_location']())>>2)]=value;
-      return value;
-    } 
-DYNAMICTOP_PTR = staticAlloc(4);
-
-STACK_BASE = STACKTOP = alignMemory(STATICTOP);
-
-STACK_MAX = STACK_BASE + TOTAL_STACK;
-
-DYNAMIC_BASE = alignMemory(STACK_MAX);
-
-HEAP32[DYNAMICTOP_PTR>>2] = DYNAMIC_BASE;
-
-staticSealed = true; // seal the static portion of memory
-
 var ASSERTIONS = false;
+
+// Copyright 2017 The Emscripten Authors.  All rights reserved.
+// Emscripten is available under two separate licenses, the MIT license and the
+// University of Illinois/NCSA Open Source License.  Both these licenses can be
+// found in the LICENSE file.
 
 /** @type {function(string, boolean=, number=)} */
 function intArrayFromString(stringy, dontAddNull, length) {
@@ -2157,60 +2036,108 @@ function intArrayToString(array) {
 }
 
 
+// ASM_LIBRARY EXTERN PRIMITIVES: Int8Array,Int32Array,Math_floor,Math_ceil
 
-Module['wasmTableSize'] = 10;
 
-Module['wasmMaxTableSize'] = 10;
+var asmGlobalArg = {};
 
-function invoke_iiiiiii(index,a1,a2,a3,a4,a5,a6) {
-  try {
-    return Module["dynCall_iiiiiii"](index,a1,a2,a3,a4,a5,a6);
-  } catch(e) {
-    if (typeof e !== 'number' && e !== 'longjmp') throw e;
-    Module["setThrew"](1, 0);
-  }
-}
-
-function invoke_viiiiiii(index,a1,a2,a3,a4,a5,a6,a7) {
-  try {
-    Module["dynCall_viiiiiii"](index,a1,a2,a3,a4,a5,a6,a7);
-  } catch(e) {
-    if (typeof e !== 'number' && e !== 'longjmp') throw e;
-    Module["setThrew"](1, 0);
-  }
-}
-
-Module.asmGlobalArg = {};
-
-Module.asmLibraryArg = { "abort": abort, "assert": assert, "enlargeMemory": enlargeMemory, "getTotalMemory": getTotalMemory, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "invoke_iiiiiii": invoke_iiiiiii, "invoke_viiiiiii": invoke_viiiiiii, "___setErrNo": ___setErrNo, "_abort": _abort, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_llvm_exp2_f32": _llvm_exp2_f32, "_llvm_exp2_f64": _llvm_exp2_f64, "_llvm_fabs_f32": _llvm_fabs_f32, "_llvm_floor_f32": _llvm_floor_f32, "_llvm_floor_f64": _llvm_floor_f64, "_llvm_pow_f64": _llvm_pow_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "DYNAMICTOP_PTR": DYNAMICTOP_PTR, "tempDoublePtr": tempDoublePtr, "ABORT": ABORT, "STACKTOP": STACKTOP, "STACK_MAX": STACK_MAX };
+var asmLibraryArg = { "___wasi_fd_close": ___wasi_fd_close, "___wasi_fd_seek": ___wasi_fd_seek, "___wasi_fd_write": ___wasi_fd_write, "__memory_base": 1024, "__table_base": 0, "_abort": _abort, "_emscripten_get_heap_size": _emscripten_get_heap_size, "_emscripten_memcpy_big": _emscripten_memcpy_big, "_emscripten_resize_heap": _emscripten_resize_heap, "_fd_close": _fd_close, "_fd_seek": _fd_seek, "_fd_write": _fd_write, "_llvm_exp2_f32": _llvm_exp2_f32, "_llvm_exp2_f64": _llvm_exp2_f64, "_llvm_log10_f32": _llvm_log10_f32, "_llvm_log10_f64": _llvm_log10_f64, "_llvm_stackrestore": _llvm_stackrestore, "_llvm_stacksave": _llvm_stacksave, "abort": abort, "abortOnCannotGrowMemory": abortOnCannotGrowMemory, "demangle": demangle, "demangleAll": demangleAll, "flush_NO_FILESYSTEM": flush_NO_FILESYSTEM, "getTempRet0": getTempRet0, "jsStackTrace": jsStackTrace, "memory": wasmMemory, "setTempRet0": setTempRet0, "stackTrace": stackTrace, "table": wasmTable, "tempDoublePtr": tempDoublePtr };
 // EMSCRIPTEN_START_ASM
 var asm =Module["asm"]// EMSCRIPTEN_END_ASM
-(Module.asmGlobalArg, Module.asmLibraryArg, buffer);
+(asmGlobalArg, asmLibraryArg, buffer);
 
 Module["asm"] = asm;
-var _free = Module["_free"] = function() {  return Module["asm"]["_free"].apply(null, arguments) };
-var _malloc = Module["_malloc"] = function() {  return Module["asm"]["_malloc"].apply(null, arguments) };
-var _memcpy = Module["_memcpy"] = function() {  return Module["asm"]["_memcpy"].apply(null, arguments) };
-var _memmove = Module["_memmove"] = function() {  return Module["asm"]["_memmove"].apply(null, arguments) };
-var _memset = Module["_memset"] = function() {  return Module["asm"]["_memset"].apply(null, arguments) };
-var _opus_encode_float = Module["_opus_encode_float"] = function() {  return Module["asm"]["_opus_encode_float"].apply(null, arguments) };
-var _opus_encoder_create = Module["_opus_encoder_create"] = function() {  return Module["asm"]["_opus_encoder_create"].apply(null, arguments) };
-var _opus_encoder_ctl = Module["_opus_encoder_ctl"] = function() {  return Module["asm"]["_opus_encoder_ctl"].apply(null, arguments) };
-var _rintf = Module["_rintf"] = function() {  return Module["asm"]["_rintf"].apply(null, arguments) };
-var _sbrk = Module["_sbrk"] = function() {  return Module["asm"]["_sbrk"].apply(null, arguments) };
-var _speex_resampler_destroy = Module["_speex_resampler_destroy"] = function() {  return Module["asm"]["_speex_resampler_destroy"].apply(null, arguments) };
-var _speex_resampler_init = Module["_speex_resampler_init"] = function() {  return Module["asm"]["_speex_resampler_init"].apply(null, arguments) };
-var _speex_resampler_process_interleaved_float = Module["_speex_resampler_process_interleaved_float"] = function() {  return Module["asm"]["_speex_resampler_process_interleaved_float"].apply(null, arguments) };
-var establishStackSpace = Module["establishStackSpace"] = function() {  return Module["asm"]["establishStackSpace"].apply(null, arguments) };
-var getTempRet0 = Module["getTempRet0"] = function() {  return Module["asm"]["getTempRet0"].apply(null, arguments) };
-var runPostSets = Module["runPostSets"] = function() {  return Module["asm"]["runPostSets"].apply(null, arguments) };
-var setTempRet0 = Module["setTempRet0"] = function() {  return Module["asm"]["setTempRet0"].apply(null, arguments) };
-var setThrew = Module["setThrew"] = function() {  return Module["asm"]["setThrew"].apply(null, arguments) };
-var stackAlloc = Module["stackAlloc"] = function() {  return Module["asm"]["stackAlloc"].apply(null, arguments) };
-var stackRestore = Module["stackRestore"] = function() {  return Module["asm"]["stackRestore"].apply(null, arguments) };
-var stackSave = Module["stackSave"] = function() {  return Module["asm"]["stackSave"].apply(null, arguments) };
-var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {  return Module["asm"]["dynCall_iiiiiii"].apply(null, arguments) };
-var dynCall_viiiiiii = Module["dynCall_viiiiiii"] = function() {  return Module["asm"]["dynCall_viiiiiii"].apply(null, arguments) };
+var _emscripten_get_sbrk_ptr = Module["_emscripten_get_sbrk_ptr"] = function() {
+  return Module["asm"]["_emscripten_get_sbrk_ptr"].apply(null, arguments)
+};
+
+var _free = Module["_free"] = function() {
+  return Module["asm"]["_free"].apply(null, arguments)
+};
+
+var _malloc = Module["_malloc"] = function() {
+  return Module["asm"]["_malloc"].apply(null, arguments)
+};
+
+var _memcpy = Module["_memcpy"] = function() {
+  return Module["asm"]["_memcpy"].apply(null, arguments)
+};
+
+var _memmove = Module["_memmove"] = function() {
+  return Module["asm"]["_memmove"].apply(null, arguments)
+};
+
+var _memset = Module["_memset"] = function() {
+  return Module["asm"]["_memset"].apply(null, arguments)
+};
+
+var _opus_encode_float = Module["_opus_encode_float"] = function() {
+  return Module["asm"]["_opus_encode_float"].apply(null, arguments)
+};
+
+var _opus_encoder_create = Module["_opus_encoder_create"] = function() {
+  return Module["asm"]["_opus_encoder_create"].apply(null, arguments)
+};
+
+var _opus_encoder_ctl = Module["_opus_encoder_ctl"] = function() {
+  return Module["asm"]["_opus_encoder_ctl"].apply(null, arguments)
+};
+
+var _opus_encoder_destroy = Module["_opus_encoder_destroy"] = function() {
+  return Module["asm"]["_opus_encoder_destroy"].apply(null, arguments)
+};
+
+var _rintf = Module["_rintf"] = function() {
+  return Module["asm"]["_rintf"].apply(null, arguments)
+};
+
+var _speex_resampler_destroy = Module["_speex_resampler_destroy"] = function() {
+  return Module["asm"]["_speex_resampler_destroy"].apply(null, arguments)
+};
+
+var _speex_resampler_init = Module["_speex_resampler_init"] = function() {
+  return Module["asm"]["_speex_resampler_init"].apply(null, arguments)
+};
+
+var _speex_resampler_process_interleaved_float = Module["_speex_resampler_process_interleaved_float"] = function() {
+  return Module["asm"]["_speex_resampler_process_interleaved_float"].apply(null, arguments)
+};
+
+var establishStackSpace = Module["establishStackSpace"] = function() {
+  return Module["asm"]["establishStackSpace"].apply(null, arguments)
+};
+
+var stackAlloc = Module["stackAlloc"] = function() {
+  return Module["asm"]["stackAlloc"].apply(null, arguments)
+};
+
+var stackRestore = Module["stackRestore"] = function() {
+  return Module["asm"]["stackRestore"].apply(null, arguments)
+};
+
+var stackSave = Module["stackSave"] = function() {
+  return Module["asm"]["stackSave"].apply(null, arguments)
+};
+
+var dynCall_ii = Module["dynCall_ii"] = function() {
+  return Module["asm"]["dynCall_ii"].apply(null, arguments)
+};
+
+var dynCall_iiii = Module["dynCall_iiii"] = function() {
+  return Module["asm"]["dynCall_iiii"].apply(null, arguments)
+};
+
+var dynCall_iiiiiii = Module["dynCall_iiiiiii"] = function() {
+  return Module["asm"]["dynCall_iiiiiii"].apply(null, arguments)
+};
+
+var dynCall_jiji = Module["dynCall_jiji"] = function() {
+  return Module["asm"]["dynCall_jiji"].apply(null, arguments)
+};
+
+var dynCall_viiiiiii = Module["dynCall_viiiiiii"] = function() {
+  return Module["asm"]["dynCall_viiiiiii"].apply(null, arguments)
+};
 ;
 
 
@@ -2290,27 +2217,32 @@ Module['asm'] = asm;
 
 
 
+
+
+
+
+
+
+var calledRun;
+
+
 /**
  * @constructor
- * @extends {Error}
  * @this {ExitStatus}
  */
 function ExitStatus(status) {
   this.name = "ExitStatus";
   this.message = "Program terminated with exit(" + status + ")";
   this.status = status;
-};
-ExitStatus.prototype = new Error();
-ExitStatus.prototype.constructor = ExitStatus;
+}
 
-var initialStackTop;
 var calledMain = false;
 
 dependenciesFulfilled = function runCaller() {
   // If run has never been called, and we should call run (INVOKE_RUN is true, and Module.noInitialRun is not false)
-  if (!Module['calledRun']) run();
-  if (!Module['calledRun']) dependenciesFulfilled = runCaller; // try this again later, after new deps are fulfilled
-}
+  if (!calledRun) run();
+  if (!calledRun) dependenciesFulfilled = runCaller; // try this again later, after new deps are fulfilled
+};
 
 
 
@@ -2318,7 +2250,7 @@ dependenciesFulfilled = function runCaller() {
 
 /** @type {function(Array=)} */
 function run(args) {
-  args = args || Module['arguments'];
+  args = args || arguments_;
 
   if (runDependencies > 0) {
     return;
@@ -2328,15 +2260,16 @@ function run(args) {
   preRun();
 
   if (runDependencies > 0) return; // a preRun added a dependency, run will be called later
-  if (Module['calledRun']) return; // run may have just been called through dependencies being fulfilled just in this very frame
 
   function doRun() {
-    if (Module['calledRun']) return; // run may have just been called while the async setStatus time below was happening
-    Module['calledRun'] = true;
+    // run may have just been called through dependencies being fulfilled just in this very frame,
+    // or while the async setStatus time below was happening
+    if (calledRun) return;
+    calledRun = true;
 
     if (ABORT) return;
 
-    ensureInitRuntime();
+    initRuntime();
 
     preMain();
 
@@ -2354,7 +2287,8 @@ function run(args) {
       }, 1);
       doRun();
     }, 1);
-  } else {
+  } else
+  {
     doRun();
   }
 }
@@ -2367,52 +2301,23 @@ function exit(status, implicit) {
   // don't need to do anything here and can just leave. if the status is
   // non-zero, though, then we need to report it.
   // (we may have warned about this earlier, if a situation justifies doing so)
-  if (implicit && Module['noExitRuntime'] && status === 0) {
+  if (implicit && noExitRuntime && status === 0) {
     return;
   }
 
-  if (Module['noExitRuntime']) {
+  if (noExitRuntime) {
   } else {
 
     ABORT = true;
     EXITSTATUS = status;
-    STACKTOP = initialStackTop;
 
     exitRuntime();
 
     if (Module['onExit']) Module['onExit'](status);
   }
 
-  if (ENVIRONMENT_IS_NODE) {
-    process['exit'](status);
-  }
-  Module['quit'](status, new ExitStatus(status));
+  quit_(status, new ExitStatus(status));
 }
-Module['exit'] = exit;
-
-var abortDecorators = [];
-
-function abort(what) {
-  if (Module['onAbort']) {
-    Module['onAbort'](what);
-  }
-
-  if (what !== undefined) {
-    Module.print(what);
-    Module.printErr(what);
-    what = JSON.stringify(what)
-  } else {
-    what = '';
-  }
-
-  ABORT = true;
-  EXITSTATUS = 1;
-
-  throw 'abort(' + what + '). Build with -s ASSERTIONS=1 for more info.';
-}
-Module['abort'] = abort;
-
-// {{PRE_RUN_ADDITIONS}}
 
 if (Module['preInit']) {
   if (typeof Module['preInit'] == 'function') Module['preInit'] = [Module['preInit']];
@@ -2422,11 +2327,9 @@ if (Module['preInit']) {
 }
 
 
-Module["noExitRuntime"] = true;
+  noExitRuntime = true;
 
 run();
-
-// {{POST_RUN_ADDITIONS}}
 
 
 
