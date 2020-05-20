@@ -5,4 +5,4 @@
 [submodule "speexdsp"]
 	path = speexdsp
 	url = https://gitlab.xiph.org/xiph/speexdsp.git
-  branch = SpeexDSP-1.2.0\
+  branch = SpeexDSP-1.2.0
